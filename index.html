@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Green School Reading</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style type="text/tailwindcss">
+body{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;background:#eaf4ec;color:#10261d;line-height:1.6}
+.f{font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em}
+.inp{@apply w-full rounded-lg border-2 border-[#b9d3c1] bg-white px-4 py-3 outline-none focus:border-[#0f3d2e]}
+.btn{@apply rounded-lg bg-[#0f3d2e] px-5 py-3 font-bold text-white hover:bg-[#165c44] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40}
+.tab{@apply shrink-0 rounded-full px-4 py-2 text-sm font-bold text-[#0f3d2e]}
+.tab.on{@apply bg-[#0f3d2e] text-white}
+.opt{@apply block w-full rounded-lg border-2 border-[#b9d3c1] bg-white px-4 py-3 text-left}
+.opt.sel{@apply border-[#0f3d2e] bg-[#0f3d2e] text-white}
+.vw{@apply rounded-sm bg-[#ffd23f] px-1 font-bold text-[#10261d]}
+.row{@apply border-b border-[#b9d3c1] py-3}
+</style>
+</head>
+<body class="min-h-screen">
+
+<section id="login" class="mx-auto max-w-md px-6 pt-20">
+  <h1 class="f text-5xl font-extrabold leading-none">Green School<br>Reading</h1>
+  <p class="mt-3">Baca poster, pelajari kosakatanya, lalu kerjakan soal.</p>
+  <div class="mt-8 space-y-3">
+    <input id="nama" class="inp" placeholder="Nama lengkap" autocomplete="name">
+    <div class="flex gap-3"><input id="kelas" class="inp" placeholder="Kelas, mis. 8A"><input id="absen" type="number" min="1" class="inp" placeholder="No. absen"></div>
+    <button id="go" class="btn w-full">Mulai membaca</button>
+    <p id="err" class="text-sm font-bold text-red-700"></p>
+  </div>
+</section>
+
+<main id="app" class="mx-auto hidden max-w-3xl px-4 pb-24">
+  <header class="flex flex-wrap items-baseline justify-between gap-2 pt-4"><b class="f text-xl">Green School Reading</b><span id="who" class="text-sm"></span></header>
+  <nav class="sticky top-0 z-10 flex gap-2 overflow-x-auto bg-[#eaf4ec] py-3">
+    <button class="tab on" data-t="poster">Poster</button>
+    <button class="tab" data-t="words">Wordbank</button>
+    <button class="tab" data-t="quiz">Soal</button>
+    <button id="tres" class="tab hidden" data-t="result">Hasil</button>
+  </nav>
+
+  <section id="poster">
+    <a href="poster.png" target="_blank" rel="noopener"><img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-xl"></a>
+    <p class="mt-2 text-sm">Ketuk poster untuk membukanya dalam ukuran penuh. Arti kata-kata penting ada di tab Wordbank.</p>
+    <button class="btn mt-5" data-t="quiz">Mulai mengerjakan soal</button>
+  </section>
+
+  <section id="words" class="hidden">
+    <p class="mb-3">Kata-kata penting dari poster dan soal. Ketuk 🔊 untuk mendengar pelafalannya.</p>
+    <input id="wq" class="inp" placeholder="Cari kata atau arti">
+    <div id="wlist" class="mt-2"></div>
+  </section>
+
+  <section id="quiz" class="hidden"><div id="qbox"></div></section>
+  <section id="result" class="hidden"><div id="rbox"></div></section>
+</main>
+
+
+<script>
+/* ===== SOAL (a = nomor opsi yang benar, mulai dari 0) ===== */
+const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.'];
+const TF=['True','False'];
+const QUESTIONS=[
+ {q:'What is the main purpose of the poster?',o:['To explain how to use electronic devices','To encourage people to save energy and protect the planet','To promote new transportation products','To teach people how to make recycling bins'],a:1},
+ {q:'Which activity is an example of sustainable transportation?',o:['Driving a private car everywhere','Using a motorcycle for every trip','Walking or cycling','Buying a new vehicle'],a:2},
+ {q:'Why does the poster encourage people to recycle waste?',o:['To increase the amount of waste','To reduce energy consumption in producing new goods','To encourage people to buy more products','To make transportation more difficult'],a:1},
+ {q:'What can people install to generate electricity for their homes?',o:['Solar panels','Recycling bins','Plastic containers','Water bottles'],a:0},
+ {q:'Which of the following actions is NOT suggested by the poster?',o:['Using public transportation','Recycling paper and plastic','Installing solar panels','Burning plastic waste'],a:3},
+ {q:'What does the word “harnessing” in “Harnessing Energy” most likely mean?',o:['Wasting energy','Using energy effectively','Throwing away energy','Stopping energy production'],a:1},
+ {q:'Which action shows that a student follows the message of the poster?',o:['Throwing plastic bottles into a river','Leaving the lights on all day','Walking to a nearby destination','Using disposable products unnecessarily'],a:2},
+ {q:'According to the poster, which materials can people recycle?',o:['Paper, plastic, glass, and metal','Food, water, and air','Sand, soil, and smoke','Oil, gasoline, and sunlight'],a:0},
+ {q:'What is one benefit of using solar panels at home?',o:['They produce more plastic waste.','They help generate electricity using solar energy.','They increase the need for public transportation.','They make recycling unnecessary.'],a:1},
+ {q:'Which title best represents the message of the poster?',o:['The Importance of Modern Technology','How to Build a New House','Save Our Planet, Save Energy','The Benefits of Private Vehicles'],a:2},
+ {q:'The poster suggests walking, cycling, and using public transportation to support sustainable transportation.',o:TF,a:0},
+ {q:'Recycling paper, plastic, glass, and metal can help reduce the energy needed to produce new goods.',o:TF,a:0},
+ {q:'The poster recommends using solar panels to generate electricity for homes.',o:TF,a:0},
+ {q:'According to the poster, burning plastic waste is one way to save energy.',o:TF,a:1},
+ {q:'The poster encourages people to use more energy and produce more waste.',o:TF,a:1}
+];
+/* ===== WORDBANK: [kata, jenis kata, arti, contoh kalimat] ===== */
+const WORDS=[
+ ['energy','n','energi','We need energy to light our homes.'],
+ ['reduce','v','mengurangi (reduced = berkurang, reducing = pengurangan)','Reduce the plastic you use every day.'],
+ ['mobility','n','mobilitas, kegiatan berpindah tempat','Walking is a green form of mobility.'],
+ ['sustainable','adj','berkelanjutan, ramah lingkungan','Cycling is a sustainable way to travel.'],
+ ['transportation','n','transportasi, alat angkut','Buses and trains are transportation.'],
+ ['public transportation','n','transportasi umum','I go to school by public transportation.'],
+ ['cycling','n','bersepeda','Cycling is good for your health.'],
+ ['vehicle','n','kendaraan','A car is a private vehicle.'],
+ ['destination','n','tempat tujuan','Walk if your destination is nearby.'],
+ ['waste','n','sampah, limbah','Please reduce waste at school.'],
+ ['recycle','v','mendaur ulang','We recycle paper and plastic.'],
+ ['disposable','adj','sekali pakai','Disposable cups become waste quickly.'],
+ ['burn','v','membakar','Burning plastic pollutes the air.'],
+ ['consumption','n','konsumsi, pemakaian','Energy consumption is how much energy we use.'],
+ ['required','adj','diperlukan, dibutuhkan','Water is required for plants to grow.'],
+ ['production','n','produksi, pembuatan','The production of new goods uses energy.'],
+ ['goods','n','barang, produk','The factory makes new goods.'],
+ ['harness','v','memanfaatkan (energi)','Solar panels harness the power of the sun.'],
+ ['take advantage of','phr','memanfaatkan','Take advantage of the sunlight.'],
+ ['solar energy','n','energi surya (matahari)','Solar energy comes from the sun.'],
+ ['install','v','memasang','They install solar panels on the roof.'],
+ ['generate','v','menghasilkan','Solar panels generate electricity.'],
+ ['electricity','n','listrik','We use electricity for lamps and fans.'],
+ ['encourage','v','mendorong, menganjurkan','The poster encourages people to save energy.'],
+ ['purpose','n','tujuan, maksud','The purpose of a poster is to give a message.'],
+ ['benefit','n','manfaat, keuntungan','One benefit of walking is better health.'],
+ ['represent','v','mewakili, menggambarkan','The title represents the main message.']
+];
+
+const $=s=>document.querySelector(s);
+let user={},ans=[],cur=0,res=null,ok={db:false,sheet:false},tt;
+const say=w=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
+
+
+function show(id){
+  document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  if(id==='quiz')renderQ();
+  scrollTo(0,0);
+}
+
+function renderWords(f=''){
+  f=f.toLowerCase();
+  $('#wlist').innerHTML=WORDS.filter(x=>(x[0]+' '+x[2]).toLowerCase().includes(f)).map(x=>`<div class="row flex items-start justify-between gap-3"><div><b class="f text-lg">${x[0]}</b> <i class="text-sm">${x[1]}</i><div class="font-bold text-[#165c44]">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div></div><button data-say="${x[0]}" aria-label="Dengarkan" class="text-2xl">🔊</button></div>`).join('')||'<p class="py-3">Kata tidak ditemukan.</p>';
+}
+
+function renderQ(){
+  const b=$('#qbox'),n=QUESTIONS.length;
+  if(!n){b.innerHTML='<p>Soal belum tersedia.</p>';return}
+  if(res){b.innerHTML='<p>Jawaban sudah dikirim. Lihat nilaimu di tab Hasil.</p>';return}
+  const q=QUESTIONS[cur];
+  b.innerHTML=`<div class="h-2 rounded bg-[#b9d3c1]"><div class="h-2 rounded bg-[#2fa866]" style="width:${(cur+1)/n*100}%"></div></div>
+  <p class="mt-3 text-sm">Soal ${cur+1} dari ${n}. ${PART[q.o.length===2?1:0]}</p>
+  <h3 class="f my-3 text-xl font-bold">${q.q}</h3>
+  <div class="space-y-2">${q.o.map((t,i)=>`<button class="opt ${ans[cur]===i?'sel':''}" data-i="${i}">${'ABCD'[i]}. ${t}</button>`).join('')}</div>
+  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Kembali</button>
+  ${cur<n-1?'<button class="btn" id="next">Lanjut</button>':'<button class="btn" id="send">Kirim jawaban</button>'}</div>`;
+}
+
+function finish(){
+  const n=QUESTIONS.length,un=QUESTIONS.filter((_,i)=>ans[i]===undefined).length;
+  if(un&&!confirm(`${un} soal belum dijawab. Tetap kirim?`))return;
+  const benar=QUESTIONS.filter((q,i)=>ans[i]===q.a).length;
+  res={...user,benar,total:n,nilai:Math.round(benar/n*100)};
+  $('#tres').classList.remove('hidden');
+  renderResult();show('result');save();
+}
+
+function renderResult(){
+  const r=res;
+  $('#rbox').innerHTML=`<div class="mx-auto grid h-44 w-44 place-items-center rounded-full" style="background:conic-gradient(#2fa866 ${r.nilai}%,#b9d3c1 0)"><div class="f grid h-36 w-36 place-items-center rounded-full bg-[#eaf4ec] text-5xl font-extrabold">${r.nilai}</div></div>
+  <p class="mt-3 text-center text-lg font-bold">${r.benar} benar dari ${r.total} soal</p>
+  <p class="text-center">${r.nilai>=80?'Great job!':r.nilai>=60?'Good effort. Keep reading!':'Read the poster again and try to remember the key words.'}</p>
+  <p id="stat" class="my-4 text-center text-sm"></p>
+  <h3 class="f mb-1 text-lg font-bold">Pembahasan singkat</h3>
+  ${QUESTIONS.map((q,i)=>`<div class="row text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br><span class="opacity-80">Jawaban benar: ${q.o[q.a]}</span></div>`).join('')}`;
+}
+
+async function save(){
+  const s=$('#stat');s.textContent='Menyimpan nilai...';
+  try{
+    const r=await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...res,todo:{db:!ok.db,sheet:!ok.sheet}})});
+    const d=await r.json();
+    ok={db:ok.db||!!d.db,sheet:ok.sheet||!!d.sheet};
+  }catch(e){}
+  s.innerHTML=ok.db&&ok.sheet?'✅ Nilai sudah tersimpan.':'⚠️ Nilai belum tersimpan sepenuhnya. <button id="retry" class="font-bold underline">Simpan ulang</button>';
+}
+
+$('#go').onclick=()=>{
+  const nama=$('#nama').value.trim(),kelas=$('#kelas').value.trim(),absen=$('#absen').value.trim();
+  if(nama.length<2||!kelas||!absen){$('#err').textContent='Isi nama, kelas, dan nomor absen dulu.';return}
+  user={nama,kelas,absen};
+  $('#login').classList.add('hidden');$('#app').classList.remove('hidden');
+  $('#who').textContent=`${nama}, kelas ${kelas}, absen ${absen}`;
+  show('poster');
+};
+$('#wq').oninput=e=>renderWords(e.target.value);
+
+document.addEventListener('click',e=>{
+  const t=e.target,d=t.dataset;
+  if(d.say)say(d.say);
+  if(d.t)show(d.t);
+  const o=t.closest('.opt');if(o){ans[cur]=+o.dataset.i;renderQ()}
+  if(t.id==='prev'){cur--;renderQ()}
+  if(t.id==='next'){cur++;renderQ()}
+  if(t.id==='send')finish();
+  if(t.id==='retry')save();
+});
+
+renderWords();
+</script>
+</body>
+</html>
