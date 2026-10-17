@@ -1,65 +1,99 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Green School Reading</title>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<title>Eco Mission | Green School Reading</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-<style type="text/tailwindcss">
-body{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;background:#eaf4ec;color:#10261d;line-height:1.6}
-.f{font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em}
-.inp{@apply w-full rounded-lg border-2 border-[#b9d3c1] bg-white px-4 py-3 outline-none focus:border-[#0f3d2e]}
-.btn{@apply rounded-lg bg-[#0f3d2e] px-5 py-3 font-bold text-white hover:bg-[#165c44] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40}
-.tab{@apply shrink-0 rounded-full px-4 py-2 text-sm font-bold text-[#0f3d2e]}
-.tab.on{@apply bg-[#0f3d2e] text-white}
-.opt{@apply block w-full rounded-lg border-2 border-[#b9d3c1] bg-white px-4 py-3 text-left}
-.opt.sel{@apply border-[#0f3d2e] bg-[#0f3d2e] text-white}
-.vw{@apply rounded-sm bg-[#ffd23f] px-1 font-bold text-[#10261d]}
-.row{@apply border-b border-[#b9d3c1] py-3}
+<style>
+:root{--sage:#9bbd6f;--pine:#17361c;--btn:#1e5a32;--sky:#5bc0e6;--sun:#ffd23f;--mint:#f4faea}
+body{font-family:Poppins,system-ui,sans-serif;font-weight:500;background:var(--sage);color:var(--pine);overflow-x:hidden}
+.f{font-family:'Bebas Neue',Impact,sans-serif;font-weight:400;letter-spacing:.01em}
+.h{color:#fff;text-shadow:0 3px 0 rgba(23,54,28,.35)}
+.pnl{background:var(--mint);border-radius:16px;padding:16px;box-shadow:0 4px 0 rgba(23,54,28,.2)}
+.btn{background:var(--btn);color:#fff;border-radius:12px;padding:12px 20px;font-weight:700;transition:transform .15s,background .15s}
+.btn:hover{background:#17482a}.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4}
+.inp{width:100%;border-radius:12px;border:2px solid #cfe3b5;background:#fff;padding:12px 16px;outline:none}
+.inp:focus{border-color:var(--btn)}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--c);color:#fff;border-radius:12px;padding:6px 4px;font-size:12px;font-weight:700;opacity:.7;transition:opacity .2s}
+.nv.hidden{display:none}.nv.on{opacity:1;box-shadow:0 0 0 3px #fff}
+.hs{position:absolute;left:8%;width:51%;height:15.4%;border-radius:12px;border:3px dashed rgba(255,255,255,.85);animation:glow 1.8s ease-in-out infinite}
+.hs.act{border:3px solid var(--sun)}.hs.done{animation:none;background:rgba(255,255,255,.2);border:3px solid #fff}
+.chip{background:#d9f0fb;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+.opt{display:flex;gap:10px;width:100%;text-align:left;background:#fff;border:2px solid #cfe3b5;border-radius:12px;padding:12px 14px;margin-top:8px;transition:transform .15s}
+.opt:active{transform:scale(.98)}.opt b{color:#2f7d4c}
+.opt.sel{background:var(--btn);color:#fff;border-color:var(--btn);animation:pop .25s}.opt.sel b{color:var(--sun)}
+.opt.good{background:#2f7d4c;color:#fff}.opt.bad{background:#b3261e;color:#fff}.opt.good b,.opt.bad b{color:#fff}
+.cloud{position:fixed;left:0;z-index:0;height:46px;width:130px;border-radius:40px;background:#c4ecf7;opacity:.7;pointer-events:none;animation:drift 55s linear infinite}
+.cloud::before{content:'';position:absolute;left:26px;top:-22px;width:56px;height:56px;border-radius:50%;background:inherit}
+.cf{position:fixed;top:-14px;width:9px;height:14px;z-index:60;animation:fall linear forwards}
+dialog{width:92vw;max-width:460px;max-height:92vh;border-radius:16px;padding:12px;background:var(--mint)}
+dialog::backdrop{background:rgba(23,54,28,.65)}
+@keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(110vw)}}
+@keyframes glow{50%{box-shadow:0 0 0 3px var(--sun),0 0 18px var(--sun)}}
+@keyframes pop{50%{transform:scale(1.03)}}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+@keyframes fl{50%{transform:translateY(-10px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body class="min-h-screen">
+<i class="cloud" style="top:12%"></i><i class="cloud" style="top:46%;animation-duration:80s;animation-delay:-30s"></i><i class="cloud" style="top:78%;animation-duration:65s;animation-delay:-12s"></i>
 
-<section id="login" class="mx-auto max-w-md px-6 pt-20">
-  <h1 class="f text-5xl font-extrabold leading-none">Green School<br>Reading</h1>
-  <p class="mt-3">Baca poster, pelajari kosakatanya, lalu kerjakan soal.</p>
-  <div class="mt-8 space-y-3">
-    <input id="nama" class="inp" placeholder="Nama lengkap" autocomplete="name">
-    <div class="flex gap-3"><input id="kelas" class="inp" placeholder="Kelas, mis. 8A"><input id="absen" type="number" min="1" class="inp" placeholder="No. absen"></div>
-    <button id="go" class="btn w-full">Mulai membaca</button>
+<section id="login" class="relative z-10 mx-auto max-w-md px-6 pt-12">
+  <div class="text-6xl" style="animation:fl 4s ease-in-out infinite">🌍</div>
+  <h1 class="f h mt-2 text-7xl leading-[.9]">Save our planet,<br>save energy</h1>
+  <p class="mt-3 font-bold">Eco Mission: complete 3 missions, earn your score, and win a badge!</p>
+  <div class="pnl mt-6 space-y-3">
+    <input id="nama" class="inp" placeholder="Full name" autocomplete="name">
+    <div class="flex gap-3"><input id="kelas" class="inp" placeholder="Class, e.g. 8A"><input id="absen" type="number" min="1" class="inp" placeholder="Student no."></div>
+    <button id="go" class="btn w-full">Start the mission</button>
     <p id="err" class="text-sm font-bold text-red-700"></p>
   </div>
 </section>
 
-<main id="app" class="mx-auto hidden max-w-3xl px-4 pb-24">
-  <header class="flex flex-wrap items-baseline justify-between gap-2 pt-4"><b class="f text-xl">Green School Reading</b><span id="who" class="text-sm"></span></header>
-  <nav class="sticky top-0 z-10 flex gap-2 overflow-x-auto bg-[#eaf4ec] py-3">
-    <button class="tab on" data-t="poster">Poster</button>
-    <button class="tab" data-t="words">Wordbank</button>
-    <button class="tab" data-t="quiz">Soal</button>
-    <button id="tres" class="tab hidden" data-t="result">Hasil</button>
+<main id="app" class="relative z-10 mx-auto hidden max-w-3xl px-4 pb-28">
+  <header class="flex items-baseline justify-between gap-2 pt-3"><b class="f h text-3xl">Eco Mission</b><span id="who" class="text-sm font-bold"></span></header>
+  <nav class="sticky top-0 z-20 flex gap-2 py-2" style="background:var(--sage)">
+    <button class="nv on" data-t="poster" style="--c:#2f7d4c">♻️<span>1 Read</span></button>
+    <button class="nv" data-t="words" style="--c:#1b78b4">♻️<span>2 Words</span></button>
+    <button class="nv" data-t="quiz" style="--c:#8a8030"><i id="lk" class="not-italic">🔒</i><span>3 Quiz</span></button>
+    <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Result</span></button>
   </nav>
 
   <section id="poster">
-    <a href="poster.png" target="_blank" rel="noopener"><img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-xl"></a>
-    <p class="mt-2 text-sm">Ketuk poster untuk membukanya dalam ukuran penuh. Arti kata-kata penting ada di tab Wordbank.</p>
-    <button class="btn mt-5" data-t="quiz">Mulai mengerjakan soal</button>
+    <h2 class="f h text-5xl leading-none">Mission 1: Read the poster</h2>
+    <p class="mt-1 font-bold">Tap each part of the poster with a white dashed border to read it. Read all three to unlock the quiz.</p>
+    <div class="relative mx-auto mt-3 max-w-md">
+      <img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-2xl shadow-xl">
+      <button class="hs" style="top:35.8%" data-s="0" aria-label="Section 1: Reduced Mobility"></button>
+      <button class="hs" style="top:52.5%" data-s="1" aria-label="Section 2: Reducing Waste"></button>
+      <button class="hs" style="top:69.3%" data-s="2" aria-label="Section 3: Harnessing Energy"></button>
+    </div>
+    <p id="cnt" class="mt-3 text-center font-bold">Read 0 of 3 sections</p>
+    <div id="sec" class="pnl mt-3 hidden"></div>
+    <button class="btn mt-4 w-full" data-t="words">Go to Mission 2: Wordbank</button>
   </section>
 
   <section id="words" class="hidden">
-    <p class="mb-3">Kata-kata penting dari poster dan soal. Ketuk 🔊 untuk mendengar pelafalannya.</p>
-    <input id="wq" class="inp" placeholder="Cari kata atau arti">
-    <div id="wlist" class="mt-2"></div>
+    <h2 class="f h text-5xl leading-none">Mission 2: Wordbank</h2>
+    <p class="mt-1 font-bold">Key words from the poster and the quiz. Tap 🔊 to hear the pronunciation.</p>
+    <input id="wq" class="inp mt-3" placeholder="Search a word or meaning">
+    <div id="wlist" class="pnl mt-3"></div>
+    <button class="btn mt-5 w-full" data-t="quiz">Go to Mission 3: Quiz</button>
   </section>
 
   <section id="quiz" class="hidden"><div id="qbox"></div></section>
   <section id="result" class="hidden"><div id="rbox"></div></section>
 </main>
 
+<button id="fab" class="btn fixed bottom-4 right-4 z-30 hidden shadow-xl">📌 View poster</button>
+<dialog id="pdlg"><img src="poster.png" alt="Poster Save Our Planet, Save Energy" class="w-full rounded-xl"><button id="cls" class="btn mt-3 w-full">Close</button></dialog>
+<div id="tip" class="fixed inset-x-4 top-20 z-40 mx-auto hidden max-w-sm rounded-xl p-3 text-center text-sm font-bold text-white shadow-xl" style="background:var(--pine)"></div>
 
 <script>
-/* ===== SOAL (a = nomor opsi yang benar, mulai dari 0) ===== */
+/* ===== QUESTIONS (a = index of the correct option, starting from 0) ===== */
 const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.'];
 const TF=['True','False'];
 const QUESTIONS=[
@@ -79,115 +113,144 @@ const QUESTIONS=[
  {q:'According to the poster, burning plastic waste is one way to save energy.',o:TF,a:1},
  {q:'The poster encourages people to use more energy and produce more waste.',o:TF,a:1}
 ];
-/* ===== WORDBANK: [kata, jenis kata, arti, contoh kalimat] ===== */
+/* ===== WORDBANK: [word, part of speech, English meaning, example sentence] ===== */
 const WORDS=[
- ['energy','n','energi','We need energy to light our homes.'],
- ['reduce','v','mengurangi (reduced = berkurang, reducing = pengurangan)','Reduce the plastic you use every day.'],
- ['mobility','n','mobilitas, kegiatan berpindah tempat','Walking is a green form of mobility.'],
- ['sustainable','adj','berkelanjutan, ramah lingkungan','Cycling is a sustainable way to travel.'],
- ['transportation','n','transportasi, alat angkut','Buses and trains are transportation.'],
- ['public transportation','n','transportasi umum','I go to school by public transportation.'],
- ['cycling','n','bersepeda','Cycling is good for your health.'],
- ['vehicle','n','kendaraan','A car is a private vehicle.'],
- ['destination','n','tempat tujuan','Walk if your destination is nearby.'],
- ['waste','n','sampah, limbah','Please reduce waste at school.'],
- ['recycle','v','mendaur ulang','We recycle paper and plastic.'],
- ['disposable','adj','sekali pakai','Disposable cups become waste quickly.'],
- ['burn','v','membakar','Burning plastic pollutes the air.'],
- ['consumption','n','konsumsi, pemakaian','Energy consumption is how much energy we use.'],
- ['required','adj','diperlukan, dibutuhkan','Water is required for plants to grow.'],
- ['production','n','produksi, pembuatan','The production of new goods uses energy.'],
- ['goods','n','barang, produk','The factory makes new goods.'],
- ['harness','v','memanfaatkan (energi)','Solar panels harness the power of the sun.'],
- ['take advantage of','phr','memanfaatkan','Take advantage of the sunlight.'],
- ['solar energy','n','energi surya (matahari)','Solar energy comes from the sun.'],
- ['install','v','memasang','They install solar panels on the roof.'],
- ['generate','v','menghasilkan','Solar panels generate electricity.'],
- ['electricity','n','listrik','We use electricity for lamps and fans.'],
- ['encourage','v','mendorong, menganjurkan','The poster encourages people to save energy.'],
- ['purpose','n','tujuan, maksud','The purpose of a poster is to give a message.'],
- ['benefit','n','manfaat, keuntungan','One benefit of walking is better health.'],
- ['represent','v','mewakili, menggambarkan','The title represents the main message.']
+ ['energy','n','power we use to make things work, such as light and heat','We need energy to light our homes.'],
+ ['reduce','v','to make something smaller or less (reduced = made less, reducing = making less)','Reduce the plastic you use every day.'],
+ ['mobility','n','the ability or the activity of moving from place to place','Walking is a green form of mobility.'],
+ ['sustainable','adj','good for the environment because it can continue without harming nature','Cycling is a sustainable way to travel.'],
+ ['transportation','n','a way of carrying people or goods from one place to another','Buses and trains are transportation.'],
+ ['public transportation','n','buses, trains and other vehicles that everyone can use','I go to school by public transportation.'],
+ ['cycling','n','riding a bicycle','Cycling is good for your health.'],
+ ['vehicle','n','a machine, such as a car or a bus, that carries people or things','A car is a private vehicle.'],
+ ['destination','n','the place where someone is going','Walk if your destination is nearby.'],
+ ['waste','n','things we throw away because we do not need them','Please reduce waste at school.'],
+ ['recycle','v','to process used things so they can be used again','We recycle paper and plastic.'],
+ ['disposable','adj','made to be used once and then thrown away','Disposable cups become waste quickly.'],
+ ['burn','v','to destroy something with fire','Burning plastic pollutes the air.'],
+ ['consumption','n','the amount of something that is used','Energy consumption is how much energy we use.'],
+ ['required','adj','needed; must be had or done','Water is required for plants to grow.'],
+ ['production','n','the process of making things','The production of new goods uses energy.'],
+ ['goods','n','things that are made to be sold','The factory makes new goods.'],
+ ['harness','v','to control something and use its power','Solar panels harness the power of the sun.'],
+ ['take advantage of','phr','to make good use of something','Take advantage of the sunlight.'],
+ ['solar energy','n','energy that comes from the sun','Solar energy comes from the sun.'],
+ ['install','v','to put equipment in place so it is ready to use','They install solar panels on the roof.'],
+ ['generate','v','to produce something, such as electricity','Solar panels generate electricity.'],
+ ['electricity','n','a kind of energy used for lamps, fans and machines','We use electricity for lamps and fans.'],
+ ['encourage','v','to give someone support or courage to do something','The poster encourages people to save energy.'],
+ ['purpose','n','the reason why something is done or made','The purpose of a poster is to give a message.'],
+ ['benefit','n','a good or helpful result','One benefit of walking is better health.'],
+ ['represent','v','to show or stand for something','The title represents the main message.']
 ];
+
+const SEC=[
+ {t:'Reduced Mobility',en:'Use sustainable transportation such as cycling, walking, or using public transportation.',k:['sustainable','cycling','public transportation']},
+ {t:'Reducing Waste',en:'Recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods.',k:['recycle','consumption','production','goods']},
+ {t:'Harnessing Energy',en:'Take advantage of solar energy by installing solar panels to generate electricity for your home.',k:['take advantage of','install','generate','solar energy']}
+];
+const SRC=[-1,0,1,2,-1,2,0,1,2,-1,0,1,2,-1,-1]; /* question n points to a poster section: -1 = whole poster */
+const INSTANT=false; /* set to true to show correct/wrong right after each answer */
 
 const $=s=>document.querySelector(s);
 let user={},ans=[],cur=0,res=null,ok={db:false,sheet:false},tt;
-const say=w=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
-
+const read=new Set();
+const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
+const toast=m=>{const p=$('#tip');p.textContent=m;p.classList.remove('hidden');clearTimeout(tt);tt=setTimeout(()=>p.classList.add('hidden'),3000)};
 
 function show(id){
+  if(id==='quiz'&&read.size<3){toast('Read all three parts of the poster to unlock the quiz.');return}
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
   if(id==='quiz')renderQ();
   scrollTo(0,0);
 }
 
+function openSec(i){
+  read.add(i);
+  document.querySelectorAll('.hs').forEach((b,j)=>{b.classList.toggle('done',read.has(j));b.classList.toggle('act',j===i)});
+  const s=SEC[i],p=$('#sec');p.classList.remove('hidden');
+  p.innerHTML=`<h3 class="f text-3xl">${i+1}. ${s.t}</h3><p class="mt-1">${s.en}</p><button class="btn mt-3" data-say="${s.en}">🔊 Listen</button><p class="mt-3 text-sm font-bold">Key words (tap to see the meaning):</p><div class="mt-1 flex flex-wrap gap-2">${s.k.map(w=>`<button class="chip" data-k="${w}">${w}</button>`).join('')}</div><p id="kw" class="mt-2 min-h-6 text-sm"></p>`;
+  $('#cnt').textContent=`Read ${read.size} of 3 sections`;
+  if(read.size===3){$('#lk').textContent='♻️';toast('Mission 3 unlocked! Visit the Wordbank or start the quiz.')}
+}
+
 function renderWords(f=''){
   f=f.toLowerCase();
-  $('#wlist').innerHTML=WORDS.filter(x=>(x[0]+' '+x[2]).toLowerCase().includes(f)).map(x=>`<div class="row flex items-start justify-between gap-3"><div><b class="f text-lg">${x[0]}</b> <i class="text-sm">${x[1]}</i><div class="font-bold text-[#165c44]">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div></div><button data-say="${x[0]}" aria-label="Dengarkan" class="text-2xl">🔊</button></div>`).join('')||'<p class="py-3">Kata tidak ditemukan.</p>';
+  $('#wlist').innerHTML=WORDS.filter(x=>(x[0]+' '+x[2]).toLowerCase().includes(f)).map(x=>`<div class="flex items-start justify-between gap-3 border-b border-[#cfe3b5] py-3 last:border-0"><div><b class="f text-2xl">${x[0]}</b> <i class="text-sm">${x[1]}</i><div class="font-bold" style="color:#1b78b4">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div></div><button data-say="${x[0]}" aria-label="Listen" class="text-2xl">🔊</button></div>`).join('')||'<p class="py-3">No words found.</p>';
 }
 
 function renderQ(){
   const b=$('#qbox'),n=QUESTIONS.length;
-  if(!n){b.innerHTML='<p>Soal belum tersedia.</p>';return}
-  if(res){b.innerHTML='<p>Jawaban sudah dikirim. Lihat nilaimu di tab Hasil.</p>';return}
-  const q=QUESTIONS[cur];
-  b.innerHTML=`<div class="h-2 rounded bg-[#b9d3c1]"><div class="h-2 rounded bg-[#2fa866]" style="width:${(cur+1)/n*100}%"></div></div>
-  <p class="mt-3 text-sm">Soal ${cur+1} dari ${n}. ${PART[q.o.length===2?1:0]}</p>
-  <h3 class="f my-3 text-xl font-bold">${q.q}</h3>
-  <div class="space-y-2">${q.o.map((t,i)=>`<button class="opt ${ans[cur]===i?'sel':''}" data-i="${i}">${'ABCD'[i]}. ${t}</button>`).join('')}</div>
-  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Kembali</button>
-  ${cur<n-1?'<button class="btn" id="next">Lanjut</button>':'<button class="btn" id="send">Kirim jawaban</button>'}</div>`;
+  if(!n){b.innerHTML='<p class="pnl">No questions yet.</p>';return}
+  if(res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Result tab.</p>';return}
+  const q=QUESTIONS[cur],a=ans[cur],pc=ans.filter(v=>v!==undefined).length/n*100,
+  cl=i=>INSTANT&&a!==undefined?(i===q.a?'good':i===a?'bad':''):(a===i?'sel':'');
+  b.innerHTML=`<div class="pnl"><div class="flex items-end gap-2"><div class="mb-2 h-3 flex-1 overflow-hidden rounded-full" style="background:#cfe3b5"><div class="h-3 rounded-full transition-all" style="width:${pc}%;background:#2f7d4c"></div></div><span class="transition-all" style="font-size:${18+pc*.22}px;line-height:1">${pc<34?'🌱':pc<67?'🌿':'🌳'}</span></div>
+  <p class="text-sm">Question ${cur+1} of ${n}. ${PART[q.o.length===2?1:0]}</p>
+  <h3 class="mt-1 text-lg font-bold">${q.q}</h3>
+  ${q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-i="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
+  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Back</button>${cur<n-1?'<button class="btn" id="next">Next</button>':'<button class="btn" id="send">Submit answers</button>'}</div></div>`;
 }
 
 function finish(){
   const n=QUESTIONS.length,un=QUESTIONS.filter((_,i)=>ans[i]===undefined).length;
-  if(un&&!confirm(`${un} soal belum dijawab. Tetap kirim?`))return;
+  if(un&&!confirm(`${un} question(s) unanswered. Submit anyway?`))return;
   const benar=QUESTIONS.filter((q,i)=>ans[i]===q.a).length;
   res={...user,benar,total:n,nilai:Math.round(benar/n*100)};
   $('#tres').classList.remove('hidden');
   renderResult();show('result');save();
+  if(res.nilai>=70)confetti();
 }
 
 function renderResult(){
-  const r=res;
-  $('#rbox').innerHTML=`<div class="mx-auto grid h-44 w-44 place-items-center rounded-full" style="background:conic-gradient(#2fa866 ${r.nilai}%,#b9d3c1 0)"><div class="f grid h-36 w-36 place-items-center rounded-full bg-[#eaf4ec] text-5xl font-extrabold">${r.nilai}</div></div>
-  <p class="mt-3 text-center text-lg font-bold">${r.benar} benar dari ${r.total} soal</p>
-  <p class="text-center">${r.nilai>=80?'Great job!':r.nilai>=60?'Good effort. Keep reading!':'Read the poster again and try to remember the key words.'}</p>
-  <p id="stat" class="my-4 text-center text-sm"></p>
-  <h3 class="f mb-1 text-lg font-bold">Pembahasan singkat</h3>
-  ${QUESTIONS.map((q,i)=>`<div class="row text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br><span class="opacity-80">Jawaban benar: ${q.o[q.a]}</span></div>`).join('')}`;
+  const r=res,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
+  $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p id="stat" class="mt-2 text-sm"></p></div>
+  <h3 class="f h mt-5 text-4xl">Review</h3>
+  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br>Correct answer: <b>${q.o[q.a]}</b><br><span class="opacity-70">Check: ${SRC[i]<0?'the whole poster':'section '+(SRC[i]+1)+' ('+SEC[SRC[i]].t+')'}</span></div>`).join('')}`;
+  let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
+
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  for(let i=0;i<60;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}vw;background:${['#ffd23f','#5bc0e6','#2f7d4c','#fff'][i%4]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)}
 }
 
 async function save(){
-  const s=$('#stat');s.textContent='Menyimpan nilai...';
+  const s=$('#stat');s.textContent='Saving your score...';
   try{
     const r=await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...res,todo:{db:!ok.db,sheet:!ok.sheet}})});
     const d=await r.json();
     ok={db:ok.db||!!d.db,sheet:ok.sheet||!!d.sheet};
   }catch(e){}
-  s.innerHTML=ok.db&&ok.sheet?'✅ Nilai sudah tersimpan.':'⚠️ Nilai belum tersimpan sepenuhnya. <button id="retry" class="font-bold underline">Simpan ulang</button>';
+  s.innerHTML=ok.db&&ok.sheet?'✅ Your score has been saved.':'⚠️ Your score was not fully saved. <button id="retry" class="font-bold underline">Try again</button>';
 }
 
 $('#go').onclick=()=>{
   const nama=$('#nama').value.trim(),kelas=$('#kelas').value.trim(),absen=$('#absen').value.trim();
-  if(nama.length<2||!kelas||!absen){$('#err').textContent='Isi nama, kelas, dan nomor absen dulu.';return}
+  if(nama.length<2||!kelas||!absen){$('#err').textContent='Please enter your name, class, and student number.';return}
   user={nama,kelas,absen};
   $('#login').classList.add('hidden');$('#app').classList.remove('hidden');
-  $('#who').textContent=`${nama}, kelas ${kelas}, absen ${absen}`;
+  $('#who').textContent=`Hello, ${nama}!`;
   show('poster');
 };
 $('#wq').oninput=e=>renderWords(e.target.value);
 
 document.addEventListener('click',e=>{
-  const t=e.target,d=t.dataset;
-  if(d.say)say(d.say);
-  if(d.t)show(d.t);
-  const o=t.closest('.opt');if(o){ans[cur]=+o.dataset.i;renderQ()}
+  const t=e.target,g=s=>t.closest(s);let x;
+  if(x=g('[data-say]'))say(x.dataset.say);
+  if(x=g('[data-t]'))show(x.dataset.t);
+  if(x=g('[data-s]'))openSec(+x.dataset.s);
+  if(x=g('[data-k]')){const w=WORDS.find(v=>v[0]===x.dataset.k);say(w[0]);$('#kw').textContent=`${w[0]}: ${w[2]}`}
+  if(x=g('.opt')){if(!(INSTANT&&ans[cur]!==undefined)){ans[cur]=+x.dataset.i;renderQ()}}
   if(t.id==='prev'){cur--;renderQ()}
   if(t.id==='next'){cur++;renderQ()}
   if(t.id==='send')finish();
   if(t.id==='retry')save();
+  if(t.id==='fab')$('#pdlg').showModal();
+  if(t.id==='cls')$('#pdlg').close();
 });
 
 renderWords();
