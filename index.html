@@ -13,14 +13,13 @@ body{font-family:Poppins,system-ui,sans-serif;font-weight:500;background:var(--s
 .h{color:#fff;text-shadow:0 3px 0 rgba(23,54,28,.35)}
 .pnl{background:var(--mint);border-radius:16px;padding:16px;box-shadow:0 4px 0 rgba(23,54,28,.2)}
 .btn{background:var(--btn);color:#fff;border-radius:12px;padding:12px 20px;font-weight:700;transition:transform .15s,background .15s}
-.btn:hover{background:#17482a}.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4}
+.btn:hover{background:#17482a}.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4;cursor:not-allowed}
 .inp{width:100%;border-radius:12px;border:2px solid #cfe3b5;background:#fff;padding:12px 16px;outline:none}
 .inp:focus{border-color:var(--btn)}
 .nv{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--c);color:#fff;border-radius:12px;padding:6px 4px;font-size:12px;font-weight:700;opacity:.7;transition:opacity .2s}
 .nv.hidden{display:none}.nv.on{opacity:1;box-shadow:0 0 0 3px #fff}
-.hs{position:absolute;left:8%;width:51%;height:15.4%;border-radius:12px;border:3px dashed rgba(255,255,255,.85);animation:glow 1.8s ease-in-out infinite}
-.hs.act{border:3px solid var(--sun)}.hs.done{animation:none;background:rgba(255,255,255,.2);border:3px solid #fff}
-.chip{background:#d9f0fb;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+.qn{width:34px;height:34px;border-radius:8px;background:#fff;border:2px solid #cfe3b5;font-size:13px;font-weight:700}
+.qn.dn{background:#cfe3b5}.qn.cur{border-color:var(--btn);box-shadow:0 0 0 2px var(--sun)}
 .opt{display:flex;gap:10px;width:100%;text-align:left;background:#fff;border:2px solid #cfe3b5;border-radius:12px;padding:12px 14px;margin-top:8px;transition:transform .15s}
 .opt:active{transform:scale(.98)}.opt b{color:#2f7d4c}
 .opt.sel{background:var(--btn);color:#fff;border-color:var(--btn);animation:pop .25s}.opt.sel b{color:var(--sun)}
@@ -31,7 +30,6 @@ body{font-family:Poppins,system-ui,sans-serif;font-weight:500;background:var(--s
 dialog{width:92vw;max-width:460px;max-height:92vh;border-radius:16px;padding:12px;background:var(--mint)}
 dialog::backdrop{background:rgba(23,54,28,.65)}
 @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(110vw)}}
-@keyframes glow{50%{box-shadow:0 0 0 3px var(--sun),0 0 18px var(--sun)}}
 @keyframes pop{50%{transform:scale(1.03)}}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
 @keyframes fl{50%{transform:translateY(-10px)}}
@@ -58,22 +56,15 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
   <nav class="sticky top-0 z-20 flex gap-2 py-2" style="background:var(--sage)">
     <button class="nv on" data-t="poster" style="--c:#2f7d4c">♻️<span>1 Read</span></button>
     <button class="nv" data-t="words" style="--c:#1b78b4">♻️<span>2 Words</span></button>
-    <button class="nv" data-t="quiz" style="--c:#8a8030"><i id="lk" class="not-italic">🔒</i><span>3 Quiz</span></button>
+    <button class="nv" data-t="quiz" style="--c:#8a8030">♻️<span>3 Quiz</span></button>
     <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Result</span></button>
   </nav>
 
   <section id="poster">
     <h2 class="f h text-5xl leading-none">Mission 1: Read the poster</h2>
-    <p class="mt-1 font-bold">Tap each part of the poster with a white dashed border to read it. Read all three to unlock the quiz.</p>
-    <div class="relative mx-auto mt-3 max-w-md">
-      <img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-2xl shadow-xl">
-      <button class="hs" style="top:35.8%" data-s="0" aria-label="Section 1: Reduced Mobility"></button>
-      <button class="hs" style="top:52.5%" data-s="1" aria-label="Section 2: Reducing Waste"></button>
-      <button class="hs" style="top:69.3%" data-s="2" aria-label="Section 3: Harnessing Energy"></button>
-    </div>
-    <p id="cnt" class="mt-3 text-center font-bold">Read 0 of 3 sections</p>
-    <div id="sec" class="pnl mt-3 hidden"></div>
-    <button class="btn mt-4 w-full" data-t="words">Go to Mission 2: Wordbank</button>
+    <p class="mt-1 font-bold">Read the poster carefully. Tap it to open it in full size. The meanings of the key words are in the Wordbank.</p>
+    <a href="poster.png" target="_blank" rel="noopener" class="mt-3 block"><img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-2xl shadow-xl"></a>
+    <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="words">Go to Mission 2: Wordbank</button><button class="btn" data-t="quiz">Start the quiz</button></div>
   </section>
 
   <section id="words" class="hidden">
@@ -90,7 +81,6 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 
 <button id="fab" class="btn fixed bottom-4 right-4 z-30 hidden shadow-xl">📌 View poster</button>
 <dialog id="pdlg"><img src="poster.png" alt="Poster Save Our Planet, Save Energy" class="w-full rounded-xl"><button id="cls" class="btn mt-3 w-full">Close</button></dialog>
-<div id="tip" class="fixed inset-x-4 top-20 z-40 mx-auto hidden max-w-sm rounded-xl p-3 text-center text-sm font-bold text-white shadow-xl" style="background:var(--pine)"></div>
 
 <script>
 /* ===== QUESTIONS (a = index of the correct option, starting from 0) ===== */
@@ -143,37 +133,20 @@ const WORDS=[
  ['benefit','n','a good or helpful result','One benefit of walking is better health.'],
  ['represent','v','to show or stand for something','The title represents the main message.']
 ];
-
-const SEC=[
- {t:'Reduced Mobility',en:'Use sustainable transportation such as cycling, walking, or using public transportation.',k:['sustainable','cycling','public transportation']},
- {t:'Reducing Waste',en:'Recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods.',k:['recycle','consumption','production','goods']},
- {t:'Harnessing Energy',en:'Take advantage of solar energy by installing solar panels to generate electricity for your home.',k:['take advantage of','install','generate','solar energy']}
-];
+const SEC=['Reduced Mobility','Reducing Waste','Harnessing Energy'];
 const SRC=[-1,0,1,2,-1,2,0,1,2,-1,0,1,2,-1,-1]; /* question n points to a poster section: -1 = whole poster */
 const INSTANT=false; /* set to true to show correct/wrong right after each answer */
 
 const $=s=>document.querySelector(s);
-let user={},ans=[],cur=0,res=null,ok={db:false,sheet:false},tt;
-const read=new Set();
+let user={},ans=[],cur=0,res=null,ok={db:false,sheet:false};
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
-const toast=m=>{const p=$('#tip');p.textContent=m;p.classList.remove('hidden');clearTimeout(tt);tt=setTimeout(()=>p.classList.add('hidden'),3000)};
 
 function show(id){
-  if(id==='quiz'&&read.size<3){toast('Read all three parts of the poster to unlock the quiz.');return}
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
   document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
   $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
   if(id==='quiz')renderQ();
   scrollTo(0,0);
-}
-
-function openSec(i){
-  read.add(i);
-  document.querySelectorAll('.hs').forEach((b,j)=>{b.classList.toggle('done',read.has(j));b.classList.toggle('act',j===i)});
-  const s=SEC[i],p=$('#sec');p.classList.remove('hidden');
-  p.innerHTML=`<h3 class="f text-3xl">${i+1}. ${s.t}</h3><p class="mt-1">${s.en}</p><button class="btn mt-3" data-say="${s.en}">🔊 Listen</button><p class="mt-3 text-sm font-bold">Key words (tap to see the meaning):</p><div class="mt-1 flex flex-wrap gap-2">${s.k.map(w=>`<button class="chip" data-k="${w}">${w}</button>`).join('')}</div><p id="kw" class="mt-2 min-h-6 text-sm"></p>`;
-  $('#cnt').textContent=`Read ${read.size} of 3 sections`;
-  if(read.size===3){$('#lk').textContent='♻️';toast('Mission 3 unlocked! Visit the Wordbank or start the quiz.')}
 }
 
 function renderWords(f=''){
@@ -185,18 +158,21 @@ function renderQ(){
   const b=$('#qbox'),n=QUESTIONS.length;
   if(!n){b.innerHTML='<p class="pnl">No questions yet.</p>';return}
   if(res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Result tab.</p>';return}
-  const q=QUESTIONS[cur],a=ans[cur],pc=ans.filter(v=>v!==undefined).length/n*100,
+  const q=QUESTIONS[cur],a=ans[cur],miss=QUESTIONS.map((_,i)=>i).filter(i=>ans[i]===undefined),pc=(n-miss.length)/n*100,
   cl=i=>INSTANT&&a!==undefined?(i===q.a?'good':i===a?'bad':''):(a===i?'sel':'');
   b.innerHTML=`<div class="pnl"><div class="flex items-end gap-2"><div class="mb-2 h-3 flex-1 overflow-hidden rounded-full" style="background:#cfe3b5"><div class="h-3 rounded-full transition-all" style="width:${pc}%;background:#2f7d4c"></div></div><span class="transition-all" style="font-size:${18+pc*.22}px;line-height:1">${pc<34?'🌱':pc<67?'🌿':'🌳'}</span></div>
   <p class="text-sm">Question ${cur+1} of ${n}. ${PART[q.o.length===2?1:0]}</p>
   <h3 class="mt-1 text-lg font-bold">${q.q}</h3>
   ${q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-i="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
-  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Back</button>${cur<n-1?'<button class="btn" id="next">Next</button>':'<button class="btn" id="send">Submit answers</button>'}</div></div>`;
+  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Back</button><button class="btn" id="next" ${cur<n-1?'':'disabled'}>Next</button></div>
+  <div class="mt-4 flex flex-wrap gap-1">${QUESTIONS.map((_,i)=>`<button class="qn ${i===cur?'cur':''} ${ans[i]!==undefined?'dn':''}" data-q="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
+  <button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>
+  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to submit. Left: ${miss.map(i=>i+1).join(', ')}.`:'All questions answered. Ready to submit!'}</p></div>`;
 }
 
 function finish(){
-  const n=QUESTIONS.length,un=QUESTIONS.filter((_,i)=>ans[i]===undefined).length;
-  if(un&&!confirm(`${un} question(s) unanswered. Submit anyway?`))return;
+  const n=QUESTIONS.length;
+  if(QUESTIONS.some((_,i)=>ans[i]===undefined))return;
   const benar=QUESTIONS.filter((q,i)=>ans[i]===q.a).length;
   res={...user,benar,total:n,nilai:Math.round(benar/n*100)};
   $('#tres').classList.remove('hidden');
@@ -208,7 +184,7 @@ function renderResult(){
   const r=res,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
   $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p id="stat" class="mt-2 text-sm"></p></div>
   <h3 class="f h mt-5 text-4xl">Review</h3>
-  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br>Correct answer: <b>${q.o[q.a]}</b><br><span class="opacity-70">Check: ${SRC[i]<0?'the whole poster':'section '+(SRC[i]+1)+' ('+SEC[SRC[i]].t+')'}</span></div>`).join('')}`;
+  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br>Correct answer: <b>${q.o[q.a]}</b><br><span class="opacity-70">Check: ${SRC[i]<0?'the whole poster':'section '+(SRC[i]+1)+' ('+SEC[SRC[i]]+')'}</span></div>`).join('')}`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
@@ -242,8 +218,7 @@ document.addEventListener('click',e=>{
   const t=e.target,g=s=>t.closest(s);let x;
   if(x=g('[data-say]'))say(x.dataset.say);
   if(x=g('[data-t]'))show(x.dataset.t);
-  if(x=g('[data-s]'))openSec(+x.dataset.s);
-  if(x=g('[data-k]')){const w=WORDS.find(v=>v[0]===x.dataset.k);say(w[0]);$('#kw').textContent=`${w[0]}: ${w[2]}`}
+  if(x=g('[data-q]')){cur=+x.dataset.q;renderQ()}
   if(x=g('.opt')){if(!(INSTANT&&ans[cur]!==undefined)){ans[cur]=+x.dataset.i;renderQ()}}
   if(t.id==='prev'){cur--;renderQ()}
   if(t.id==='next'){cur++;renderQ()}
