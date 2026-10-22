@@ -202,7 +202,7 @@ function show(id){
   scrollTo(0,0);
 }
 
-function kbar(){const n=WORDS.length;$('#kbar').style.width=known.size/n*100+'\%';$('#ktxt').textContent=known.size===n?'🎉 You understand all the words! Time for the quiz.':`Understood ${known.size} of ${n} words`}
+function kbar(){const n=WORDS.length;$('#kbar').style.width=known.size/n*100+'%';$('#ktxt').textContent=known.size===n?'🎉 You understand all the words! Time for the quiz.':`Understood ${known.size} of ${n} words`}
 function renderWords(){
   const f=$('#wq').value.toLowerCase();
   $('#wlist').innerHTML=WORDS.map((x,i)=>[x,i]).filter(([x,i])=>(x[0]+' '+x[2]).toLowerCase().includes(f)&&(fl==='all'||(fl==='yes')===known.has(i))).map(([x,i])=>`<div class="pnl ${known.has(i)?'wk':''}"><div class="flex items-start justify-between gap-3"><div><b class="f text-3xl leading-none">${x[0]}</b> <i class="text-sm">${x[1]}</i></div><button data-say="${x[0]}" aria-label="Listen" class="text-2xl">🔊</button></div><div class="mt-1 font-bold" style="color:#1b78b4">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div><button class="ub" data-u="${i}">${known.has(i)?'✓ Understood':'I understand'}</button></div>`).join('')||'<p class="pnl">No words found.</p>';
@@ -222,8 +222,8 @@ function renderQ(k){
   ${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct. Keep going!</div>'}
   <div class="mt-5 flex justify-between"><button class="btn" data-k="${k}" data-nav="-1" ${S.cur?'':'disabled'}>Back</button><button class="btn" data-k="${k}" data-nav="1" ${S.cur<n-1?'':'disabled'}>Next</button></div>
   <div class="mt-4 flex flex-wrap gap-1">${L.map((_,i)=>`<button class="qn ${i===S.cur?'cur':''} ${S.ans[i]!==undefined?'dn':''}" data-k="${k}" data-j="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
-  ${k==='quiz' ? (miss.length ? `<button class="btn mt-4 w-full" id="send" disabled>Submit answers</button>` : `<div class="mt-4 grid gap-2 sm:grid-cols-2"><button id="retake" class="btn" style="background:#b3261e">Retake Quiz</button><button class="btn" id="send">Submit answers</button></div>`) : `<button class="btn mt-4 w-full" data-t="poster" ${miss.length?'disabled':''}>Continue to the poster</button>`}
-  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to ${k==='quiz'?'submit':'continue'}. Left: ${miss.map(i=>i+1).join(', ')}.`:k==='quiz'?'All questions answered. Ready to submit!':`Warm-up score: ${right} of${n}. Great start!`}</p></div>`;
+  ${k==='quiz'?`<button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>`:`<button class="btn mt-4 w-full" data-t="poster" ${miss.length?'disabled':''}>Continue to the poster</button>`}
+  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to ${k==='quiz'?'submit':'continue'}. Left: ${miss.map(i=>i+1).join(', ')}.`:k==='quiz'?'All questions answered. Ready to submit!':`Warm-up score: ${right} of ${n}. Great start!`}</p></div>`;
 }
 
 function finish(){
@@ -239,9 +239,9 @@ function finish(){
 function renderResult(){
   const r=res,A=Q.ans,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
   $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p><p id="stat" class="mt-2 text-sm"></p></div>
-  <div class="mt-4 grid gap-2 sm:grid-cols-2"><button id="retake" class="btn" style="background:#b3261e">Retake Quiz</button><button class="btn" data-t="reflect">Next: Reflection</button></div>
   <h3 class="f h mt-5 text-4xl">Your answers</h3>
-  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b>${q.q}</div>`).join('')}`;
+  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}
+  <button class="btn mt-4 w-full" data-t="reflect">Next: Reflection</button>`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
@@ -249,7 +249,7 @@ function renderResult(){
 function chkRef(){const b=$('#rfin');if(b)b.disabled=REF.some((r,i)=>r.t?!(rf[i]||'').trim():rf[i]===undefined)}
 function renderRef(){
   $('#rfbox').innerHTML=rfDone?`<div class="pnl text-center"><p class="text-5xl">🌍</p><p class="f text-4xl">Thank you!</p><p class="font-bold">You finished all the activities. Keep saving our planet!</p><p id="rstat" class="mt-2 text-sm">${rmsg}</p></div>`:
-  `<div class="space-y-3">${REF.map((r,i)=>`<div class="pnl"><p class="text-sm font-bold">Reflection ${i+1} of${REF.length}</p><h3 class="mt-1 font-bold">${r.q}</h3>${r.t?`<textarea class="inp mt-2" rows="2" data-r="${i}" placeholder="Write your answer in English">${esc(rf[i]||'')}</textarea>`:r.o.map((t,j)=>`<button class="opt ${rf[i]===j?'sel':''}" data-rc="${i}" data-rj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}</div>`).join('')}<button id="rfin" class="btn w-full" disabled>Finish</button></div>`;
+  `<div class="space-y-3">${REF.map((r,i)=>`<div class="pnl"><p class="text-sm font-bold">Reflection ${i+1} of ${REF.length}</p><h3 class="mt-1 font-bold">${r.q}</h3>${r.t?`<textarea class="inp mt-2" rows="2" data-r="${i}" placeholder="Write your answer in English">${esc(rf[i]||'')}</textarea>`:r.o.map((t,j)=>`<button class="opt ${rf[i]===j?'sel':''}" data-rc="${i}" data-rj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}</div>`).join('')}<button id="rfin" class="btn w-full" disabled>Finish</button></div>`;
   chkRef();
 }
 
@@ -300,14 +300,6 @@ document.addEventListener('click',e=>{
   if(x=g('[data-fl]')){fl=x.dataset.fl;document.querySelectorAll('.fl').forEach(b=>b.classList.toggle('on',b.dataset.fl===fl));renderWords()}
   if(x=g('[data-rc]')){rf[+x.dataset.rc]=+x.dataset.rj;renderRef()}
   if(t.id==='send')finish();
-  if(t.id==='retake'){
-    ST.quiz.ans = [];
-    ST.quiz.cur = 0;
-    res = null;
-    $('#tres').classList.add('hidden');
-    $('#trf').classList.add('hidden');
-    show('quiz');
-  }
   if(t.id==='rfin'){rfDone=true;renderRef();scrollTo(0,0);saveRef()}
   if(t.id==='rretry')saveRef();
   if(t.id==='retry')save();
