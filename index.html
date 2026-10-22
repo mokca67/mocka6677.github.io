@@ -16,14 +16,21 @@ body{font-family:Poppins,system-ui,sans-serif;font-weight:500;background:var(--s
 .btn:hover{background:#17482a}.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4;cursor:not-allowed}
 .inp{width:100%;border-radius:12px;border:2px solid #cfe3b5;background:#fff;padding:12px 16px;outline:none}
 .inp:focus{border-color:var(--btn)}
-.nv{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--c);color:#fff;border-radius:12px;padding:6px 4px;font-size:12px;font-weight:700;opacity:.7;transition:opacity .2s}
+.nv{flex:1;min-width:64px;white-space:nowrap;display:flex;flex-direction:column;align-items:center;background:var(--c);color:#fff;border-radius:12px;padding:6px 4px;font-size:12px;font-weight:700;opacity:.7;transition:opacity .2s}
 .nv.hidden{display:none}.nv.on{opacity:1;box-shadow:0 0 0 3px #fff}
 .qn{width:34px;height:34px;border-radius:8px;background:#fff;border:2px solid #cfe3b5;font-size:13px;font-weight:700}
 .qn.dn{background:#cfe3b5}.qn.cur{border-color:var(--btn);box-shadow:0 0 0 2px var(--sun)}
 .opt{display:flex;gap:10px;width:100%;text-align:left;background:#fff;border:2px solid #cfe3b5;border-radius:12px;padding:12px 14px;margin-top:8px;transition:transform .15s}
 .opt:active{transform:scale(.98)}.opt b{color:#2f7d4c}
 .opt.sel{background:var(--btn);color:#fff;border-color:var(--btn);animation:pop .25s}.opt.sel b{color:var(--sun)}
-.opt.good{background:#2f7d4c;color:#fff}.opt.bad{background:#b3261e;color:#fff}.opt.good b,.opt.bad b{color:#fff}
+.opt.good{background:#2f7d4c;color:#fff;border-color:#2f7d4c;animation:pop .25s}.opt.bad{background:#b3261e;color:#fff;border-color:#b3261e;animation:pop .25s}.opt.good b,.opt.bad b{color:#fff}
+.opt.dim{opacity:.55}
+.fb{margin-top:10px;border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;animation:pop .25s}
+.fb.ok{background:#d6f2dc;color:#14532d}.fb.no{background:#fde2e0;color:#8a1c14}
+.fl{border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;background:#fff;border:2px solid #cfe3b5}
+.fl.on{background:var(--btn);color:#fff;border-color:var(--btn)}
+.ub{width:100%;margin-top:12px;border-radius:10px;padding:8px;font-weight:700;background:#fff;border:2px solid #2f7d4c;color:#1e5a32}
+.wk{background:#d6f2dc;animation:pop .3s}.wk .ub{background:#2f7d4c;color:#fff}
 .cloud{position:fixed;left:0;z-index:0;height:46px;width:130px;border-radius:40px;background:#c4ecf7;opacity:.7;pointer-events:none;animation:drift 55s linear infinite}
 .cloud::before{content:'';position:absolute;left:26px;top:-22px;width:56px;height:56px;border-radius:50%;background:inherit}
 .cf{position:fixed;top:-14px;width:9px;height:14px;z-index:60;animation:fall linear forwards}
@@ -42,7 +49,7 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 <section id="login" class="relative z-10 mx-auto max-w-md px-6 pt-12">
   <div class="text-6xl" style="animation:fl 4s ease-in-out infinite">🌍</div>
   <h1 class="f h mt-2 text-7xl leading-[.9]">Save our planet,<br>save energy</h1>
-  <p class="mt-3 font-bold">Eco Mission: complete 3 missions, earn your score, and win a badge!</p>
+  <p class="mt-3 font-bold">Eco Mission: complete 4 missions, earn your score, and win a badge!</p>
   <div class="pnl mt-6 space-y-3">
     <input id="nama" class="inp" placeholder="Full name" autocomplete="name">
     <div class="flex gap-3"><input id="kelas" class="inp" placeholder="Class, e.g. 8A"><input id="absen" type="number" min="1" class="inp" placeholder="Student no."></div>
@@ -53,30 +60,49 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 
 <main id="app" class="relative z-10 mx-auto hidden max-w-3xl px-4 pb-28">
   <header class="flex items-baseline justify-between gap-2 pt-3"><b class="f h text-3xl">Eco Mission</b><span id="who" class="text-sm font-bold"></span></header>
-  <nav class="sticky top-0 z-20 flex gap-2 py-2" style="background:var(--sage)">
-    <button class="nv on" data-t="poster" style="--c:#2f7d4c">♻️<span>1 Read</span></button>
-    <button class="nv" data-t="words" style="--c:#1b78b4">♻️<span>2 Words</span></button>
-    <button class="nv" data-t="quiz" style="--c:#8a8030">♻️<span>3 Quiz</span></button>
-    <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Result</span></button>
+  <nav class="sticky top-0 z-20 flex gap-2 overflow-x-auto py-2" style="background:var(--sage)">
+    <button class="nv on" data-t="warm" style="--c:#2f7d4c">🌿<span>1 Warm-up</span></button>
+    <button class="nv" data-t="poster" style="--c:#1b78b4">♻️<span>2 Read</span></button>
+    <button class="nv" data-t="words" style="--c:#8a8030">♻️<span>3 Words</span></button>
+    <button class="nv" data-t="quiz" style="--c:#2f7d4c">♻️<span>4 Quiz</span></button>
+    <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Score</span></button>
+    <button id="trf" class="nv hidden" data-t="reflect" style="--c:#1b78b4">💭<span>Reflect</span></button>
   </nav>
 
-  <section id="poster">
-    <h2 class="f h text-5xl leading-none">Mission 1: Read the poster</h2>
+  <section id="warm">
+    <h2 class="f h text-5xl leading-none">Mission 1: Warm-up</h2>
+    <p class="mt-1 font-bold">Answer 5 quick questions about being eco-friendly. You will see right away if your answer is correct. Finish all 5 to unlock the next missions.</p>
+    <p id="wmsg" class="fb no hidden">Please finish the warm-up first. Answer all 5 questions to unlock the next missions.</p>
+    <div id="wbox" class="mt-3"></div>
+  </section>
+
+  <section id="poster" class="hidden">
+    <h2 class="f h text-5xl leading-none">Mission 2: Read the poster</h2>
     <p class="mt-1 font-bold">Read the poster carefully. Tap it to open it in full size. The meanings of the key words are in the Wordbank.</p>
     <a href="poster.png" target="_blank" rel="noopener" class="mt-3 block"><img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-2xl shadow-xl"></a>
-    <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="words">Go to Mission 2: Wordbank</button><button class="btn" data-t="quiz">Start the quiz</button></div>
+    <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="words">Go to Mission 3: Wordbank</button><button class="btn" data-t="quiz">Start the quiz</button></div>
   </section>
 
   <section id="words" class="hidden">
-    <h2 class="f h text-5xl leading-none">Mission 2: Wordbank</h2>
-    <p class="mt-1 font-bold">Key words from the poster and the quiz. Tap 🔊 to hear the pronunciation.</p>
+    <h2 class="f h text-5xl leading-none">Mission 3: Wordbank</h2>
+    <p class="mt-1 font-bold">Read each word and its meaning. When you understand a word, press the "I understand" button under it.</p>
+    <div class="pnl mt-3"><div class="h-3 overflow-hidden rounded-full" style="background:#cfe3b5"><div id="kbar" class="h-3 rounded-full transition-all" style="width:0;background:#1b78b4"></div></div><p id="ktxt" class="mt-1 text-sm font-bold"></p></div>
+    <div class="mt-3 flex gap-2"><button class="fl on" data-fl="all">All</button><button class="fl" data-fl="no">Not yet</button><button class="fl" data-fl="yes">Understood</button></div>
     <input id="wq" class="inp mt-3" placeholder="Search a word or meaning">
-    <div id="wlist" class="pnl mt-3"></div>
-    <button class="btn mt-5 w-full" data-t="quiz">Go to Mission 3: Quiz</button>
+    <div id="wlist" class="mt-3 space-y-3"></div>
+    <button class="btn mt-5 w-full" data-t="quiz">Go to Mission 4: Quiz</button>
   </section>
 
-  <section id="quiz" class="hidden"><div id="qbox"></div></section>
+  <section id="quiz" class="hidden">
+    <h2 class="f h mb-3 text-5xl leading-none">Mission 4: Quiz</h2>
+    <div id="qbox"></div>
+  </section>
   <section id="result" class="hidden"><div id="rbox"></div></section>
+  <section id="reflect" class="hidden">
+    <h2 class="f h text-5xl leading-none">Reflection</h2>
+    <p class="mt-1 font-bold">Think about what you did today. Answer all 5 questions in English.</p>
+    <div id="rfbox" class="mt-3"></div>
+  </section>
 </main>
 
 <button id="fab" class="btn fixed bottom-4 right-4 z-30 hidden shadow-xl">📌 View poster</button>
@@ -133,60 +159,108 @@ const WORDS=[
  ['benefit','n','a good or helpful result','One benefit of walking is better health.'],
  ['represent','v','to show or stand for something','The title represents the main message.']
 ];
-const SEC=['Reduced Mobility','Reducing Waste','Harnessing Energy'];
-const SRC=[-1,0,1,2,-1,2,0,1,2,-1,0,1,2,-1,-1]; /* question n points to a poster section: -1 = whole poster */
-const INSTANT=false; /* set to true to show correct/wrong right after each answer */
+/* ===== WARM-UP: 5 basic questions before the poster ===== */
+const WARM=[
+ {q:'What does "eco-friendly" mean?',o:['Very expensive','Good for the environment','Made of gold','Dangerous for nature'],a:1},
+ {q:'Which color do people often connect with nature and the environment?',o:['Black','Red','Green','Grey'],a:2},
+ {q:'Which action saves energy?',o:['Leaving the fan on all day','Using many lamps at the same time','Opening the fridge for a long time','Turning off the lights when we leave a room'],a:3},
+ {q:'Which item can we recycle?',o:['A plastic bottle','A used tissue','Food leftovers','Dirty water'],a:0},
+ {q:'Which one is a source of clean energy?',o:['Coal','Oil','The sun','Gasoline'],a:2}
+];
+/* ===== REFLECTION: t:1 = written answer, otherwise multiple choice ===== */
+const REF=[
+ {q:'How well did you understand the poster?',o:['Very well','Quite well','A little','Not yet']},
+ {q:'Which part of the poster was the hardest for you?',o:['Reduced Mobility','Reducing Waste','Harnessing Energy','None, it was easy']},
+ {q:'Which new word will you remember? Write the word and make a sentence with it.',t:1},
+ {q:'What is one thing you will do at school or at home to save energy?',t:1},
+ {q:'What will you do to improve your reading next time?',o:['Read more English texts','Learn more new words','Read the text more carefully','Ask my teacher or friends for help']}
+];
 
 const $=s=>document.querySelector(s);
-let user={},ans=[],cur=0,res=null,ok={db:false,sheet:false};
+const ST={warm:{list:WARM,ans:[],cur:0},quiz:{list:QUESTIONS,ans:[],cur:0}};
+const Q=ST.quiz,known=new Set(),rf=[];
+let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
 
+const warmDone=()=>WARM.every((_,i)=>ST.warm.ans[i]!==undefined);
+function lockNav(){
+  const d=warmDone();
+  document.querySelectorAll('.nv').forEach(b=>{if(['poster','words','quiz'].includes(b.dataset.t)){b.style.opacity=d?'':'.4';b.firstChild.textContent=d?'♻️':'🔒'}});
+  if(d)$('#wmsg').classList.add('hidden');
+}
 function show(id){
+  const blocked=id!=='warm'&&!warmDone();
+  if(blocked)id='warm';
+  $('#wmsg').classList.toggle('hidden',!blocked);
+  lockNav();
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
   document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
   $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
-  if(id==='quiz')renderQ();
+  if(id==='warm'||id==='quiz')renderQ(id);
+  if(id==='reflect')renderRef();
   scrollTo(0,0);
 }
 
-function renderWords(f=''){
-  f=f.toLowerCase();
-  $('#wlist').innerHTML=WORDS.filter(x=>(x[0]+' '+x[2]).toLowerCase().includes(f)).map(x=>`<div class="flex items-start justify-between gap-3 border-b border-[#cfe3b5] py-3 last:border-0"><div><b class="f text-2xl">${x[0]}</b> <i class="text-sm">${x[1]}</i><div class="font-bold" style="color:#1b78b4">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div></div><button data-say="${x[0]}" aria-label="Listen" class="text-2xl">🔊</button></div>`).join('')||'<p class="py-3">No words found.</p>';
+function kbar(){const n=WORDS.length;$('#kbar').style.width=known.size/n*100+'%';$('#ktxt').textContent=known.size===n?'🎉 You understand all the words! Time for the quiz.':`Understood ${known.size} of ${n} words`}
+function renderWords(){
+  const f=$('#wq').value.toLowerCase();
+  $('#wlist').innerHTML=WORDS.map((x,i)=>[x,i]).filter(([x,i])=>(x[0]+' '+x[2]).toLowerCase().includes(f)&&(fl==='all'||(fl==='yes')===known.has(i))).map(([x,i])=>`<div class="pnl ${known.has(i)?'wk':''}"><div class="flex items-start justify-between gap-3"><div><b class="f text-3xl leading-none">${x[0]}</b> <i class="text-sm">${x[1]}</i></div><button data-say="${x[0]}" aria-label="Listen" class="text-2xl">🔊</button></div><div class="mt-1 font-bold" style="color:#1b78b4">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div><button class="ub" data-u="${i}">${known.has(i)?'✓ Understood':'I understand'}</button></div>`).join('')||'<p class="pnl">No words found.</p>';
+  kbar();
 }
 
-function renderQ(){
-  const b=$('#qbox'),n=QUESTIONS.length;
-  if(!n){b.innerHTML='<p class="pnl">No questions yet.</p>';return}
-  if(res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Result tab.</p>';return}
-  const q=QUESTIONS[cur],a=ans[cur],miss=QUESTIONS.map((_,i)=>i).filter(i=>ans[i]===undefined),pc=(n-miss.length)/n*100,
-  cl=i=>INSTANT&&a!==undefined?(i===q.a?'good':i===a?'bad':''):(a===i?'sel':'');
+function renderQ(k){
+  const S=ST[k],L=S.list,n=L.length,b=$(k==='warm'?'#wbox':'#qbox');
+  if(k==='quiz'&&res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Score tab.</p>';return}
+  const q=L[S.cur],a=S.ans[S.cur],miss=L.map((_,i)=>i).filter(i=>S.ans[i]===undefined),pc=(n-miss.length)/n*100,
+  cl=i=>a===undefined?'':i===a?(a===q.a?'good':'bad'):'dim',
+  right=L.filter((x,i)=>S.ans[i]===x.a).length;
   b.innerHTML=`<div class="pnl"><div class="flex items-end gap-2"><div class="mb-2 h-3 flex-1 overflow-hidden rounded-full" style="background:#cfe3b5"><div class="h-3 rounded-full transition-all" style="width:${pc}%;background:#2f7d4c"></div></div><span class="transition-all" style="font-size:${18+pc*.22}px;line-height:1">${pc<34?'🌱':pc<67?'🌿':'🌳'}</span></div>
-  <p class="text-sm">Question ${cur+1} of ${n}. ${PART[q.o.length===2?1:0]}</p>
+  <p class="text-sm">Question ${S.cur+1} of ${n}. ${k==='quiz'?PART[q.o.length===2?1:0]:'Choose the best answer.'}</p>
   <h3 class="mt-1 text-lg font-bold">${q.q}</h3>
-  ${q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-i="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
-  <div class="mt-5 flex justify-between"><button class="btn" id="prev" ${cur?'':'disabled'}>Back</button><button class="btn" id="next" ${cur<n-1?'':'disabled'}>Next</button></div>
-  <div class="mt-4 flex flex-wrap gap-1">${QUESTIONS.map((_,i)=>`<button class="qn ${i===cur?'cur':''} ${ans[i]!==undefined?'dn':''}" data-q="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
-  <button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>
-  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to submit. Left: ${miss.map(i=>i+1).join(', ')}.`:'All questions answered. Ready to submit!'}</p></div>`;
+  ${q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-k="${k}" data-o="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
+  ${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct. Keep going!</div>'}
+  <div class="mt-5 flex justify-between"><button class="btn" data-k="${k}" data-nav="-1" ${S.cur?'':'disabled'}>Back</button><button class="btn" data-k="${k}" data-nav="1" ${S.cur<n-1?'':'disabled'}>Next</button></div>
+  <div class="mt-4 flex flex-wrap gap-1">${L.map((_,i)=>`<button class="qn ${i===S.cur?'cur':''} ${S.ans[i]!==undefined?'dn':''}" data-k="${k}" data-j="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
+  ${k==='quiz'?`<button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>`:`<button class="btn mt-4 w-full" data-t="poster" ${miss.length?'disabled':''}>Continue to the poster</button>`}
+  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to ${k==='quiz'?'submit':'continue'}. Left: ${miss.map(i=>i+1).join(', ')}.`:k==='quiz'?'All questions answered. Ready to submit!':`Warm-up score: ${right} of ${n}. Great start!`}</p></div>`;
 }
 
 function finish(){
-  const n=QUESTIONS.length;
-  if(QUESTIONS.some((_,i)=>ans[i]===undefined))return;
-  const benar=QUESTIONS.filter((q,i)=>ans[i]===q.a).length;
+  const n=QUESTIONS.length,A=Q.ans;
+  if(QUESTIONS.some((_,i)=>A[i]===undefined))return;
+  const benar=QUESTIONS.filter((q,i)=>A[i]===q.a).length;
   res={...user,benar,total:n,nilai:Math.round(benar/n*100)};
-  $('#tres').classList.remove('hidden');
+  $('#tres').classList.remove('hidden');$('#trf').classList.remove('hidden');
   renderResult();show('result');save();
   if(res.nilai>=70)confetti();
 }
 
 function renderResult(){
-  const r=res,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
-  $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p id="stat" class="mt-2 text-sm"></p></div>
-  <h3 class="f h mt-5 text-4xl">Review</h3>
-  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${ans[i]===q.a?'✅':'❌'} <b>${i+1}.</b> ${q.q}<br>Correct answer: <b>${q.o[q.a]}</b><br><span class="opacity-70">Check: ${SRC[i]<0?'the whole poster':'section '+(SRC[i]+1)+' ('+SEC[SRC[i]]+')'}</span></div>`).join('')}`;
+  const r=res,A=Q.ans,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
+  $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p><p id="stat" class="mt-2 text-sm"></p></div>
+  <h3 class="f h mt-5 text-4xl">Your answers</h3>
+  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}
+  <button class="btn mt-4 w-full" data-t="reflect">Next: Reflection</button>`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
+}
+
+function chkRef(){const b=$('#rfin');if(b)b.disabled=REF.some((r,i)=>r.t?!(rf[i]||'').trim():rf[i]===undefined)}
+function renderRef(){
+  $('#rfbox').innerHTML=rfDone?`<div class="pnl text-center"><p class="text-5xl">🌍</p><p class="f text-4xl">Thank you!</p><p class="font-bold">You finished all the activities. Keep saving our planet!</p><p id="rstat" class="mt-2 text-sm">${rmsg}</p></div>`:
+  `<div class="space-y-3">${REF.map((r,i)=>`<div class="pnl"><p class="text-sm font-bold">Reflection ${i+1} of ${REF.length}</p><h3 class="mt-1 font-bold">${r.q}</h3>${r.t?`<textarea class="inp mt-2" rows="2" data-r="${i}" placeholder="Write your answer in English">${esc(rf[i]||'')}</textarea>`:r.o.map((t,j)=>`<button class="opt ${rf[i]===j?'sel':''}" data-rc="${i}" data-rj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}</div>`).join('')}<button id="rfin" class="btn w-full" disabled>Finish</button></div>`;
+  chkRef();
+}
+
+const setR=m=>{rmsg=m;const e=$('#rstat');if(e)e.innerHTML=m};
+async function saveRef(){
+  setR('Saving your reflection...');
+  try{
+    const r=await fetch('/api/reflect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...user,nilai:res?res.nilai:'',answers:REF.map((q,i)=>q.t?String(rf[i]).trim():q.o[rf[i]])})});
+    const d=await r.json();rok=!!d.ok;
+  }catch(e){}
+  setR(rok?'✅ Your reflection has been saved.':'⚠️ Your reflection was not saved. <button id="rretry" class="font-bold underline">Try again</button>');
 }
 
 function confetti(){
@@ -210,19 +284,24 @@ $('#go').onclick=()=>{
   user={nama,kelas,absen};
   $('#login').classList.add('hidden');$('#app').classList.remove('hidden');
   $('#who').textContent=`Hello, ${nama}!`;
-  show('poster');
+  show('warm');
 };
-$('#wq').oninput=e=>renderWords(e.target.value);
+$('#wq').oninput=renderWords;
+document.addEventListener('input',e=>{const i=e.target.dataset.r;if(i!==undefined){rf[+i]=e.target.value;chkRef()}});
 
 document.addEventListener('click',e=>{
   const t=e.target,g=s=>t.closest(s);let x;
   if(x=g('[data-say]'))say(x.dataset.say);
   if(x=g('[data-t]'))show(x.dataset.t);
-  if(x=g('[data-q]')){cur=+x.dataset.q;renderQ()}
-  if(x=g('.opt')){if(!(INSTANT&&ans[cur]!==undefined)){ans[cur]=+x.dataset.i;renderQ()}}
-  if(t.id==='prev'){cur--;renderQ()}
-  if(t.id==='next'){cur++;renderQ()}
+  if(x=g('[data-o]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.ans[S.cur]=+x.dataset.o;renderQ(x.dataset.k);lockNav()}}
+  if(x=g('[data-nav]')){ST[x.dataset.k].cur+=+x.dataset.nav;renderQ(x.dataset.k)}
+  if(x=g('[data-j]')){ST[x.dataset.k].cur=+x.dataset.j;renderQ(x.dataset.k)}
+  if(x=g('[data-u]')){const i=+x.dataset.u;known.has(i)?known.delete(i):known.add(i);x.closest('.pnl').classList.toggle('wk',known.has(i));x.textContent=known.has(i)?'✓ Understood':'I understand';kbar()}
+  if(x=g('[data-fl]')){fl=x.dataset.fl;document.querySelectorAll('.fl').forEach(b=>b.classList.toggle('on',b.dataset.fl===fl));renderWords()}
+  if(x=g('[data-rc]')){rf[+x.dataset.rc]=+x.dataset.rj;renderRef()}
   if(t.id==='send')finish();
+  if(t.id==='rfin'){rfDone=true;renderRef();scrollTo(0,0);saveRef()}
+  if(t.id==='rretry')saveRef();
   if(t.id==='retry')save();
   if(t.id==='fab')$('#pdlg').showModal();
   if(t.id==='cls')$('#pdlg').close();
