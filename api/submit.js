@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
     benar: parseInt(b.benar, 10),
     total: parseInt(b.total, 10),
     nilai: Math.round(Number(b.nilai)),
+    attempt: Math.max(1, parseInt(b.attempt, 10) || 1),
   };
   if (!row.nama || !row.kelas || !(row.total > 0) || !(row.benar >= 0 && row.benar <= row.total) || !(row.nilai >= 0 && row.nilai <= 100)) {
     return res.status(400).json({ error: 'Data tidak valid' });
@@ -46,7 +47,7 @@ module.exports = async (req, res) => {
         url: `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A1:append`,
         method: 'POST',
         params: { valueInputOption: 'USER_ENTERED', insertDataOption: 'INSERT_ROWS' },
-        data: { values: [[waktu, row.nama, row.kelas, row.absen, row.benar, row.total, row.nilai]] },
+        data: { values: [[waktu, row.nama, row.kelas, row.absen, row.benar, row.total, row.nilai, row.attempt]] },
       });
       out.sheet = r.status === 200;
     })().catch((e) => console.error('Sheets:', e.message)),
