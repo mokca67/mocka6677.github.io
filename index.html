@@ -123,6 +123,11 @@ const QUESTIONS=[
  {q:'According to the poster, which materials can people recycle?',o:['Paper, plastic, glass, and metal','Food, water, and air','Sand, soil, and smoke','Oil, gasoline, and sunlight'],a:0},
  {q:'What is one benefit of using solar panels at home?',o:['They produce more plastic waste.','They help generate electricity using solar energy.','They increase the need for public transportation.','They make recycling unnecessary.'],a:1},
  {q:'Which title best represents the message of the poster?',o:['The Importance of Modern Technology','How to Build a New House','Save Our Planet, Save Energy','The Benefits of Private Vehicles'],a:2},
+ {q:'What does the phrase “Save Our Planet” encourage people to do?',o:['Protect the Earth','Build more factories','Use more plastic','Buy more vehicles'],a:0},
+ {q:'Rina wants to reduce energy consumption. Which activity should she choose?',o:['Driving a car to a nearby shop','Cycling to a nearby shop','Throwing away recyclable bottles','Leaving electronic devices on when not in use'],a:1},
+ {q:'Why is using public transportation recommended in the poster?',o:['It helps support sustainable transportation.','It increases plastic production.','It makes recycling unnecessary.','It uses solar panels at home.'],a:0},
+ {q:'Which recycling bin activity is most appropriate based on the poster?',o:['Mixing all waste and throwing it into a river','Burning paper and plastic waste','Putting recyclable materials into the appropriate bins','Leaving waste on the ground'],a:2},
+ {q:'What can we conclude from the poster?',o:['Only adults can help protect the environment.','Small actions can help save energy and protect the planet.','Recycling is the only way to save the planet.','Solar energy is not useful for households.'],a:1},
  {q:'The poster suggests walking, cycling, and using public transportation to support sustainable transportation.',o:TF,a:0},
  {q:'Recycling paper, plastic, glass, and metal can help reduce the energy needed to produce new goods.',o:TF,a:0},
  {q:'The poster recommends using solar panels to generate electricity for homes.',o:TF,a:0},
@@ -179,10 +184,17 @@ const REF=[
 const $=s=>document.querySelector(s);
 const ST={warm:{list:WARM,ans:[],cur:0},quiz:{list:QUESTIONS,ans:[],cur:0}};
 const Q=ST.quiz,known=new Set(),rf=[];
-let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='';
+let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[];
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
 
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function mixQuiz(){
+  const tf=q=>q.o.length===2;
+  const mc=shuf(QUESTIONS.filter(q=>!tf(q))).map(q=>{const p=shuf(q.o.map((_,i)=>i));return{q:q.q,o:p.map(i=>q.o[i]),a:p.indexOf(q.a)}});
+  ST.quiz.list=[...mc,...shuf(QUESTIONS.filter(tf))];
+  ST.quiz.ans=[];ST.quiz.cur=0;
+}
 const warmDone=()=>WARM.every((_,i)=>ST.warm.ans[i]!==undefined);
 function lockNav(){
   const d=warmDone();
@@ -199,6 +211,7 @@ function show(id){
   $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
   if(id==='warm'||id==='quiz')renderQ(id);
   if(id==='reflect')renderRef();
+  if(id==='result')lockAgain();
   scrollTo(0,0);
 }
 
@@ -227,10 +240,10 @@ function renderQ(k){
 }
 
 function finish(){
-  const n=QUESTIONS.length,A=Q.ans;
-  if(QUESTIONS.some((_,i)=>A[i]===undefined))return;
-  const benar=QUESTIONS.filter((q,i)=>A[i]===q.a).length;
-  res={...user,benar,total:n,nilai:Math.round(benar/n*100)};
+  const L=Q.list,n=L.length,A=Q.ans;
+  if(L.some((_,i)=>A[i]===undefined))return;
+  const benar=L.filter((q,i)=>A[i]===q.a).length;
+  att++;res={...user,benar,total:n,nilai:Math.round(benar/n*100),attempt:att};hist.push(res.nilai);
   $('#tres').classList.remove('hidden');$('#trf').classList.remove('hidden');
   renderResult();show('result');save();
   if(res.nilai>=70)confetti();
@@ -238,10 +251,11 @@ function finish(){
 
 function renderResult(){
   const r=res,A=Q.ans,b=r.nilai>=90?['🏆','Eco Hero']:r.nilai>=70?['🛡️','Green Defender']:['🌱','Eco Seedling'];
-  $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p><p id="stat" class="mt-2 text-sm"></p></div>
+  $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p>${hist.length>1?`<p class="text-sm font-bold">${hist.map((v,i)=>`Attempt ${i+1}: ${v}`).join(', ')}</p>`:''}<p id="stat" class="mt-2 text-sm"></p></div>
+  <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="reflect">Next: Reflection</button><button id="again" class="btn" disabled>Try again</button></div>
+  <p id="anote" class="mt-2 text-center text-sm font-bold"></p>
   <h3 class="f h mt-5 text-4xl">Your answers</h3>
-  ${QUESTIONS.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}
-  <button class="btn mt-4 w-full" data-t="reflect">Next: Reflection</button>`;
+  ${Q.list.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
@@ -260,12 +274,25 @@ async function saveRef(){
     const r=await fetch('/api/reflect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...user,nilai:res?res.nilai:'',answers:REF.map((q,i)=>q.t?String(rf[i]).trim():q.o[rf[i]])})});
     const d=await r.json();rok=!!d.ok;
   }catch(e){}
-  setR(rok?'✅ Your reflection has been saved.':'⚠️ Your reflection was not saved. <button id="rretry" class="font-bold underline">Try again</button>');
+  setR(rok?'✅ Your reflection has been saved.':'⚠️ Your reflection was not saved. <button id="rretry" class="font-bold underline">Save again</button>');
 }
 
 function confetti(){
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   for(let i=0;i<60;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}vw;background:${['#ffd23f','#5bc0e6','#2f7d4c','#fff'][i%4]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)}
+}
+
+function lockAgain(){
+  const b=$('#again'),n=$('#anote');if(!b)return;
+  const saved=ok.db&&ok.sheet;
+  b.disabled=!saved||rfDone;
+  n.textContent=rfDone?'You finished the reflection, so you cannot try again.':saved?'You can try again as many times as you like.':'Your score must be saved before you can try again.';
+}
+function again(){
+  if(rfDone||!(ok.db&&ok.sheet))return;
+  res=null;ok={db:false,sheet:false};
+  $('#tres').classList.add('hidden');$('#trf').classList.add('hidden');
+  mixQuiz();show('quiz');
 }
 
 async function save(){
@@ -275,13 +302,14 @@ async function save(){
     const d=await r.json();
     ok={db:ok.db||!!d.db,sheet:ok.sheet||!!d.sheet};
   }catch(e){}
-  s.innerHTML=ok.db&&ok.sheet?'✅ Your score has been saved.':'⚠️ Your score was not fully saved. <button id="retry" class="font-bold underline">Try again</button>';
+  s.innerHTML=ok.db&&ok.sheet?'✅ Your score has been saved.':'⚠️ Your score was not fully saved. <button id="retry" class="font-bold underline">Save again</button>';
+  lockAgain();
 }
 
 $('#go').onclick=()=>{
   const nama=$('#nama').value.trim(),kelas=$('#kelas').value.trim(),absen=$('#absen').value.trim();
   if(nama.length<2||!kelas||!absen){$('#err').textContent='Please enter your name, class, and student number.';return}
-  user={nama,kelas,absen};
+  user={nama,kelas,absen};mixQuiz();
   $('#login').classList.add('hidden');$('#app').classList.remove('hidden');
   $('#who').textContent=`Hello, ${nama}!`;
   show('warm');
@@ -303,6 +331,7 @@ document.addEventListener('click',e=>{
   if(t.id==='rfin'){rfDone=true;renderRef();scrollTo(0,0);saveRef()}
   if(t.id==='rretry')saveRef();
   if(t.id==='retry')save();
+  if(t.id==='again')again();
   if(t.id==='fab')$('#pdlg').showModal();
   if(t.id==='cls')$('#pdlg').close();
 });
