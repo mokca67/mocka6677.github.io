@@ -85,7 +85,8 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 
   <section id="words" class="hidden">
     <h2 class="f h text-5xl leading-none">Mission 3: Wordbank</h2>
-    <p class="mt-1 font-bold">Read each word and its meaning. When you understand a word, press the "I understand" button under it.</p>
+    <p class="mt-1 font-bold">Read each word and its meaning. When you understand a word, press the "I understand" button under it. Understand at least <span class="minw">10</span> words to unlock the quiz.</p>
+    <p id="kmsg" class="fb no hidden"></p>
     <div class="pnl mt-3"><div class="h-3 overflow-hidden rounded-full" style="background:#cfe3b5"><div id="kbar" class="h-3 rounded-full transition-all" style="width:0;background:#1b78b4"></div></div><p id="ktxt" class="mt-1 text-sm font-bold"></p></div>
     <div class="mt-3 flex gap-2"><button class="fl on" data-fl="all">All</button><button class="fl" data-fl="no">Not yet</button><button class="fl" data-fl="yes">Understood</button></div>
     <input id="wq" class="inp mt-3" placeholder="Search a word or meaning">
@@ -110,7 +111,7 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 
 <script>
 /* ===== QUESTIONS (a = index of the correct option, starting from 0) ===== */
-const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.'];
+const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.','Ordering: tap the steps one by one in the correct order.'];
 const TF=['True','False'];
 const QUESTIONS=[
  {q:'What is the main purpose of the poster?',o:['To explain how to use electronic devices','To encourage people to save energy and protect the planet','To promote new transportation products','To teach people how to make recycling bins'],a:1},
@@ -132,7 +133,12 @@ const QUESTIONS=[
  {q:'Recycling paper, plastic, glass, and metal can help reduce the energy needed to produce new goods.',o:TF,a:0},
  {q:'The poster recommends using solar panels to generate electricity for homes.',o:TF,a:0},
  {q:'According to the poster, burning plastic waste is one way to save energy.',o:TF,a:1},
- {q:'The poster encourages people to use more energy and produce more waste.',o:TF,a:1}
+ {q:'The poster encourages people to use more energy and produce more waste.',o:TF,a:1},
+ {q:'How to sort waste at school: put the steps in the correct order.',s:['Look at the waste in your hand.','Decide if it is paper, plastic, or food waste.','Find the right bin.','Put the waste in the bin.']},
+ {q:'How to Save Energy When Charging Your Phone: put the steps in the correct order.',s:['Plug the charger into the power socket.','Connect your phone to the charger.','Charge your phone until the battery is full.','Unplug the charger from the socket.']},
+ {q:'How to Save Electricity When Watching TV: put the steps in the correct order.',s:['Press the power button to turn on the television.','Choose your favorite program.','Turn off the television when you finish watching.','Unplug the television if you will not use it for a long time.']},
+ {q:'How to Save Energy in the Classroom: put the steps in the correct order.',s:['Check the classroom before leaving.','Turn off the fans when nobody is in the classroom.','Turn off the classroom lights.','Leave the classroom after the lesson.']},
+ {q:'How to Plant a Tree at School: put the steps in the correct order.',s:['Prepare a small tree and a suitable place.','Dig a hole in the soil.','Put the tree into the hole and cover its roots with soil.','Water the plant regularly.']}
 ];
 /* ===== WORDBANK: [word, part of speech, English meaning, example sentence] ===== */
 const WORDS=[
@@ -162,7 +168,18 @@ const WORDS=[
  ['encourage','v','to give someone support or courage to do something','The poster encourages people to save energy.'],
  ['purpose','n','the reason why something is done or made','The purpose of a poster is to give a message.'],
  ['benefit','n','a good or helpful result','One benefit of walking is better health.'],
- ['represent','v','to show or stand for something','The title represents the main message.']
+ ['represent','v','to show or stand for something','The title represents the main message.'],
+ ['step','n','one part of a process or a set of instructions','Read each step carefully.'],
+ ['instructions','n','words that tell you how to do something','Follow the instructions to plant a tree.'],
+ ['rinse','v','to wash something quickly with clean water','Rinse the bottle before you recycle it.'],
+ ['sort','v','to put things into groups or types','Sort your waste into paper, plastic and food.'],
+ ['bin','n','a container for waste','Put the paper in the recycling bin.'],
+ ['reuse','v','to use something again','We reuse old bottles as pencil holders.'],
+ ['remind','v','to help someone remember to do something','Please remind me to turn off the lights.'],
+ ['unplug','v','to take a plug out of the socket','Unplug the charger when you finish.'],
+ ['socket','n','the place on a wall where you put in a plug','The charger is in the socket.'],
+ ['sufficiently','adv','enough; as much as you need','The phone is sufficiently charged.'],
+ ['natural light','n','light that comes from the sun','Open the window to get natural light.']
 ];
 /* ===== WARM-UP: 5 basic questions before the poster ===== */
 const WARM=[
@@ -182,29 +199,39 @@ const REF=[
 ];
 
 const $=s=>document.querySelector(s);
-const ST={warm:{list:WARM,ans:[],cur:0},quiz:{list:QUESTIONS,ans:[],cur:0}};
-const Q=ST.quiz,known=new Set(),rf=[];
-let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[];
+const ST={warm:{list:WARM,ans:[],cur:0,pk:[]},quiz:{list:QUESTIONS,ans:[],cur:0,pk:[]}};
+const Q=ST.quiz,known=new Set(),rf=[],MIN_WORDS=10;
+let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[],wUnlocked=false;
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
 
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function mixQuiz(){
-  const tf=q=>q.o.length===2;
-  const mc=shuf(QUESTIONS.filter(q=>!tf(q))).map(q=>{const p=shuf(q.o.map((_,i)=>i));return{q:q.q,o:p.map(i=>q.o[i]),a:p.indexOf(q.a)}});
-  ST.quiz.list=[...mc,...shuf(QUESTIONS.filter(tf))];
-  ST.quiz.ans=[];ST.quiz.cur=0;
+  const ord=q=>!!q.s,tf=q=>!ord(q)&&q.o.length===2;
+  const mc=shuf(QUESTIONS.filter(q=>!ord(q)&&!tf(q))).map(q=>{const p=shuf(q.o.map((_,i)=>i));return{q:q.q,o:p.map(i=>q.o[i]),a:p.indexOf(q.a)}});
+  const od=shuf(QUESTIONS.filter(ord)).map(q=>{const n=q.s.map((_,i)=>i);let p;do{p=shuf(n)}while(p.every((v,i)=>v===i));return{q:q.q,s:p.map(i=>q.s[i]),a:n.map(k=>p.indexOf(k))}});
+  ST.quiz.list=[...mc,...shuf(QUESTIONS.filter(tf)),...od];
+  ST.quiz.ans=[];ST.quiz.pk=[];ST.quiz.cur=0;
+}
+const isOk=(q,a)=>q.s?Array.isArray(a)&&q.a.every((v,k)=>v===a[k]):a===q.a;
+function ordHTML(k,q,S,a,rt){
+  const pk=S.pk[S.cur]||[];
+  return q.s.map((t,i)=>{const n=pk.indexOf(i);return `<button class="opt ${n>-1?(a===undefined?'sel':rt?'good':'bad'):''}" data-k="${k}" data-st="${i}"><b>${n>-1?n+1:'•'}</b><span>${t}</span></button>`}).join('')+(a===undefined?`<button class="fl mt-3" data-k="${k}" data-rs="1">Reset order</button>`:'');
 }
 const warmDone=()=>WARM.every((_,i)=>ST.warm.ans[i]!==undefined);
+const wordsOk=()=>wUnlocked||known.size>=MIN_WORDS;
 function lockNav(){
   const d=warmDone();
-  document.querySelectorAll('.nv').forEach(b=>{if(['poster','words','quiz'].includes(b.dataset.t)){b.style.opacity=d?'':'.4';b.firstChild.textContent=d?'♻️':'🔒'}});
+  document.querySelectorAll('.nv').forEach(b=>{const t=b.dataset.t;if(['poster','words','quiz'].includes(t)){const lk=!d||(t==='quiz'&&!wordsOk());b.style.opacity=lk?'.4':'';b.firstChild.textContent=lk?'🔒':'♻️'}});
   if(d)$('#wmsg').classList.add('hidden');
 }
 function show(id){
   const blocked=id!=='warm'&&!warmDone();
   if(blocked)id='warm';
+  const wlock=!blocked&&id==='quiz'&&!wordsOk();
+  if(wlock){id='words';$('#kmsg').textContent=`Please understand at least ${MIN_WORDS} words before the quiz. You have ${known.size} so far.`}
   $('#wmsg').classList.toggle('hidden',!blocked);
+  $('#kmsg').classList.toggle('hidden',!wlock);
   lockNav();
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
   document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
@@ -215,7 +242,14 @@ function show(id){
   scrollTo(0,0);
 }
 
-function kbar(){const n=WORDS.length;$('#kbar').style.width=known.size/n*100+'%';$('#ktxt').textContent=known.size===n?'🎉 You understand all the words! Time for the quiz.':`Understood ${known.size} of ${n} words`}
+function kbar(){
+  const n=WORDS.length;
+  if(known.size>=MIN_WORDS)wUnlocked=true;
+  $('#kbar').style.width=known.size/n*100+'%';
+  $('#ktxt').textContent=`Understood ${known.size} of ${n} words. `+(wordsOk()?(known.size===n?'🎉 You understand all the words! Time for the quiz.':'The quiz is unlocked!'):`Understand at least ${MIN_WORDS} words to unlock the quiz.`);
+  if(wordsOk())$('#kmsg').classList.add('hidden');
+  lockNav();
+}
 function renderWords(){
   const f=$('#wq').value.toLowerCase();
   $('#wlist').innerHTML=WORDS.map((x,i)=>[x,i]).filter(([x,i])=>(x[0]+' '+x[2]).toLowerCase().includes(f)&&(fl==='all'||(fl==='yes')===known.has(i))).map(([x,i])=>`<div class="pnl ${known.has(i)?'wk':''}"><div class="flex items-start justify-between gap-3"><div><b class="f text-3xl leading-none">${x[0]}</b> <i class="text-sm">${x[1]}</i></div><button data-say="${x[0]}" aria-label="Listen" class="text-2xl">🔊</button></div><div class="mt-1 font-bold" style="color:#1b78b4">${x[2]}</div><div class="text-sm opacity-80">${x[3]}</div><button class="ub" data-u="${i}">${known.has(i)?'✓ Understood':'I understand'}</button></div>`).join('')||'<p class="pnl">No words found.</p>';
@@ -227,12 +261,12 @@ function renderQ(k){
   if(k==='quiz'&&res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Score tab.</p>';return}
   const q=L[S.cur],a=S.ans[S.cur],miss=L.map((_,i)=>i).filter(i=>S.ans[i]===undefined),pc=(n-miss.length)/n*100,
   cl=i=>a===undefined?'':i===a?(a===q.a?'good':'bad'):'dim',
-  right=L.filter((x,i)=>S.ans[i]===x.a).length;
+  right=L.filter((x,i)=>S.ans[i]===x.a).length,rt=a!==undefined&&isOk(q,a);
   b.innerHTML=`<div class="pnl"><div class="flex items-end gap-2"><div class="mb-2 h-3 flex-1 overflow-hidden rounded-full" style="background:#cfe3b5"><div class="h-3 rounded-full transition-all" style="width:${pc}%;background:#2f7d4c"></div></div><span class="transition-all" style="font-size:${18+pc*.22}px;line-height:1">${pc<34?'🌱':pc<67?'🌿':'🌳'}</span></div>
-  <p class="text-sm">Question ${S.cur+1} of ${n}. ${k==='quiz'?PART[q.o.length===2?1:0]:'Choose the best answer.'}</p>
+  <p class="text-sm">Question ${S.cur+1} of ${n}. ${k==='quiz'?PART[q.s?2:q.o.length===2?1:0]:'Choose the best answer.'}</p>
   <h3 class="mt-1 text-lg font-bold">${q.q}</h3>
-  ${q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-k="${k}" data-o="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
-  ${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct. Keep going!</div>'}
+  ${q.s?ordHTML(k,q,S,a,rt):q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-k="${k}" data-o="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
+  ${a===undefined?'':rt?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct. Keep going!</div>'}
   <div class="mt-5 flex justify-between"><button class="btn" data-k="${k}" data-nav="-1" ${S.cur?'':'disabled'}>Back</button><button class="btn" data-k="${k}" data-nav="1" ${S.cur<n-1?'':'disabled'}>Next</button></div>
   <div class="mt-4 flex flex-wrap gap-1">${L.map((_,i)=>`<button class="qn ${i===S.cur?'cur':''} ${S.ans[i]!==undefined?'dn':''}" data-k="${k}" data-j="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
   ${k==='quiz'?`<button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>`:`<button class="btn mt-4 w-full" data-t="poster" ${miss.length?'disabled':''}>Continue to the poster</button>`}
@@ -242,7 +276,7 @@ function renderQ(k){
 function finish(){
   const L=Q.list,n=L.length,A=Q.ans;
   if(L.some((_,i)=>A[i]===undefined))return;
-  const benar=L.filter((q,i)=>A[i]===q.a).length;
+  const benar=L.filter((q,i)=>isOk(q,A[i])).length;
   att++;res={...user,benar,total:n,nilai:Math.round(benar/n*100),attempt:att};hist.push(res.nilai);
   $('#tres').classList.remove('hidden');$('#trf').classList.remove('hidden');
   renderResult();show('result');save();
@@ -255,7 +289,7 @@ function renderResult(){
   <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="reflect">Next: Reflection</button><button id="again" class="btn" disabled>Try again</button></div>
   <p id="anote" class="mt-2 text-center text-sm font-bold"></p>
   <h3 class="f h mt-5 text-4xl">Your answers</h3>
-  ${Q.list.map((q,i)=>`<div class="pnl mt-2 text-sm">${A[i]===q.a?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}`;
+  ${Q.list.map((q,i)=>`<div class="pnl mt-2 text-sm">${isOk(q,A[i])?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
@@ -322,6 +356,8 @@ document.addEventListener('click',e=>{
   if(x=g('[data-say]'))say(x.dataset.say);
   if(x=g('[data-t]'))show(x.dataset.t);
   if(x=g('[data-o]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.ans[S.cur]=+x.dataset.o;renderQ(x.dataset.k);lockNav()}}
+  if(x=g('[data-st]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){const pk=S.pk[S.cur]=S.pk[S.cur]||[],i=+x.dataset.st;if(!pk.includes(i))pk.push(i);else if(pk[pk.length-1]===i)pk.pop();if(pk.length===S.list[S.cur].s.length)S.ans[S.cur]=[...pk];renderQ(x.dataset.k)}}
+  if(x=g('[data-rs]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.pk[S.cur]=[];renderQ(x.dataset.k)}}
   if(x=g('[data-nav]')){ST[x.dataset.k].cur+=+x.dataset.nav;renderQ(x.dataset.k)}
   if(x=g('[data-j]')){ST[x.dataset.k].cur=+x.dataset.j;renderQ(x.dataset.k)}
   if(x=g('[data-u]')){const i=+x.dataset.u;known.has(i)?known.delete(i):known.add(i);x.closest('.pnl').classList.toggle('wk',known.has(i));x.textContent=known.has(i)?'✓ Understood':'I understand';kbar()}
@@ -336,6 +372,7 @@ document.addEventListener('click',e=>{
   if(t.id==='cls')$('#pdlg').close();
 });
 
+document.querySelectorAll('.minw').forEach(e=>e.textContent=MIN_WORDS);
 renderWords();
 </script>
 </body>
