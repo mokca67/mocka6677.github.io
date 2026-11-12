@@ -31,9 +31,13 @@ body{font-family:Poppins,system-ui,sans-serif;font-weight:500;background:var(--s
 .fl.on{background:var(--btn);color:#fff;border-color:var(--btn)}
 .ub{width:100%;margin-top:12px;border-radius:10px;padding:8px;font-weight:700;background:#fff;border:2px solid #2f7d4c;color:#1e5a32}
 .wk{background:#d6f2dc;animation:pop .3s}.wk .ub{background:#2f7d4c;color:#fff}
+.secbtn{background:#ffd23f;color:#17361c;font-weight:800;animation:blink 1s ease-in-out infinite}
+.btn.secbtn:hover{background:#ffd23f}
+.nv.secnv{opacity:1;animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(255,210,63,.95);filter:brightness(1)}50%{box-shadow:0 0 0 10px rgba(255,210,63,0),0 0 22px 6px #ffd23f;filter:brightness(1.3)}}
 .cloud{position:fixed;left:0;z-index:0;height:46px;width:130px;border-radius:40px;background:#c4ecf7;opacity:.7;pointer-events:none;animation:drift 55s linear infinite}
 .cloud::before{content:'';position:absolute;left:26px;top:-22px;width:56px;height:56px;border-radius:50%;background:inherit}
-.cf{position:fixed;top:-14px;width:9px;height:14px;z-index:60;animation:fall linear forwards}
+.cf{position:fixed;top:-14px;width:9px;height:14px;z-index:80;animation:fall linear forwards}
 dialog{width:92vw;max-width:460px;max-height:92vh;border-radius:16px;padding:12px;background:var(--mint)}
 dialog::backdrop{background:rgba(23,54,28,.65)}
 @keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(110vw)}}
@@ -66,6 +70,7 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
     <button class="nv" data-t="words" style="--c:#8a8030">♻️<span>3 Words</span></button>
     <button class="nv" data-t="quiz" style="--c:#2f7d4c">♻️<span>4 Quiz</span></button>
     <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Score</span></button>
+    <button id="tsec" class="nv secnv hidden" data-t="secret" style="--c:#b8860b">🗝️<span>Secret</span></button>
     <button id="trf" class="nv hidden" data-t="reflect" style="--c:#1b78b4">💭<span>Reflect</span></button>
   </nav>
 
@@ -99,6 +104,11 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
     <div id="qbox"></div>
   </section>
   <section id="result" class="hidden"><div id="rbox"></div></section>
+  <section id="secret" class="hidden">
+    <h2 class="f h text-5xl leading-none">Secret Mission</h2>
+    <p class="mt-1 font-bold">You unlocked a special challenge that only certain students get! Answer 4 questions and write a short answer.</p>
+    <div id="sbox" class="mt-3"></div>
+  </section>
   <section id="reflect" class="hidden">
     <h2 class="f h text-5xl leading-none">Reflection</h2>
     <p class="mt-1 font-bold">Think about what you did today. Answer all 5 questions in English.</p>
@@ -107,6 +117,17 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 </main>
 
 <button id="fab" class="btn fixed bottom-4 right-4 z-30 hidden shadow-xl">📌 View poster</button>
+<div id="spop" class="fixed inset-0 z-[70] flex hidden items-center justify-center p-4" style="background:rgba(23,54,28,.65)" role="dialog" aria-modal="true" aria-labelledby="spt">
+  <div class="pnl w-full max-w-sm text-center" style="background:#fff4c2">
+    <p class="text-6xl">🔓</p>
+    <h3 id="spt" class="f text-4xl">Secret Mission unlocked!</h3>
+    <p class="mt-1 font-bold">Amazing! You did so well on your first try. A special challenge is waiting for you: 4 questions and a short answer.</p>
+    <p class="mt-2 text-sm font-bold">Only certain students get this Secret Mission, and you are one of them!</p>
+    <p class="mt-3 rounded-lg px-3 py-2 text-sm font-bold" style="background:#ffd23f">⭐ Answer all 5 questions correctly and you can earn 1 star for your class assessment!</p>
+    <button id="sgo" class="btn secbtn mt-4 w-full">Start Secret Mission</button>
+    <button id="slater" class="mt-2 w-full rounded-lg py-2 text-sm font-bold underline">Maybe later</button>
+  </div>
+</div>
 <dialog id="pdlg"><img src="poster.png" alt="Poster Save Our Planet, Save Energy" class="w-full rounded-xl"><button id="cls" class="btn mt-3 w-full">Close</button></dialog>
 
 <script>
@@ -179,7 +200,10 @@ const WORDS=[
  ['unplug','v','to take a plug out of the socket','Unplug the charger when you finish.'],
  ['socket','n','the place on a wall where you put in a plug','The charger is in the socket.'],
  ['sufficiently','adv','enough; as much as you need','The phone is sufficiently charged.'],
- ['natural light','n','light that comes from the sun','Open the window to get natural light.']
+ ['natural light','n','light that comes from the sun','Open the window to get natural light.'],
+ ['impact','n','the effect that something has on a person or a place','Forest fires have a big impact on the environment.'],
+ ['habitat','n','the natural home of an animal or a plant','Fire can destroy the habitat of many animals.'],
+ ['haze','n','thin smoke or dust in the air that makes it hard to see','The haze from the fires made the air dirty.']
 ];
 /* ===== WARM-UP: 5 basic questions before the poster ===== */
 const WARM=[
@@ -198,10 +222,24 @@ const REF=[
  {q:'What will you do to improve your reading next time?',o:['Read more English texts','Learn more new words','Read the text more carefully','Ask my teacher or friends for help']}
 ];
 
+/* ===== SECRET MISSION: 4 multiple-choice questions (fix:1 = keep the option order) + 1 short answer ===== */
+const SECRET=[
+ {q:'A small factory wants to follow the idea in “Reducing Waste”. Which plan is best?',o:['Buy new raw materials for every product.','Make new products from recycled paper, plastic, glass, and metal.','Burn the leftover materials every day.','Run the machines all night.'],a:1},
+ {q:'In “Use sustainable transportation”, the word “sustainable” is closest in meaning to ...',o:['fast and expensive','good for the environment over a long time','old and slow','only for adults'],a:1},
+ {q:'Many sentences in the poster begin with verbs such as “Use”, “Recycle”, and “Take”. What is the purpose of these sentences?',o:['To tell a story about the past','To ask the reader questions','To give instructions and advice','To describe a famous person'],a:2},
+ {q:'Look at these steps: 1) Plug the charger into the socket. 2) Connect your phone to the charger. 3) Charge your phone until the battery is full. 4) Leave the charger plugged in all night. Which step does NOT help save energy?',o:['Step 1','Step 2','Step 3','Step 4'],a:3,fix:1}
+];
+const SQ5='What is your opinion about forest fires? Explain their impacts on the environment and on people. (Write 3 to 5 sentences in English.)';
+const SM={ans:[],txt:'',done:false,list:[],when:''},MIN_SEC=15;
+const SECRET_MIN=92; /* minimum score on the FIRST attempt to unlock the Secret Mission */
+const skey=()=>'ecoSecret:'+[user.nama,user.kelas,user.absen].map(v=>String(v).trim().toLowerCase().replace(/\s+/g,' ')).join('|');
+const secretSeen=()=>{try{return !!localStorage.getItem(skey())}catch(e){return false}};
+const secretMark=()=>{try{localStorage.setItem(skey(),'1')}catch(e){}};
+
 const $=s=>document.querySelector(s);
 const ST={warm:{list:WARM,ans:[],cur:0,pk:[]},quiz:{list:QUESTIONS,ans:[],cur:0,pk:[]}};
 const Q=ST.quiz,known=new Set(),rf=[],MIN_WORDS=10;
-let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[],wUnlocked=false;
+let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[],wUnlocked=false,secretOn=false;
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
 
@@ -226,6 +264,7 @@ function lockNav(){
   if(d)$('#wmsg').classList.add('hidden');
 }
 function show(id){
+  if(id==='secret'&&!secretOn)return;
   const blocked=id!=='warm'&&!warmDone();
   if(blocked)id='warm';
   const wlock=!blocked&&id==='quiz'&&!wordsOk();
@@ -238,6 +277,7 @@ function show(id){
   $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
   if(id==='warm'||id==='quiz')renderQ(id);
   if(id==='reflect')renderRef();
+  if(id==='secret')renderSec();
   if(id==='result')lockAgain();
   scrollTo(0,0);
 }
@@ -277,10 +317,11 @@ function finish(){
   const L=Q.list,n=L.length,A=Q.ans;
   if(L.some((_,i)=>A[i]===undefined))return;
   const benar=L.filter((q,i)=>isOk(q,A[i])).length;
-  att++;res={...user,benar,total:n,nilai:Math.round(benar/n*100),attempt:att};hist.push(res.nilai);
+  att++;res={...user,benar,total:n,nilai:Math.round(benar/n*100),attempt:att};hist.push(res.nilai);const unlock=att===1&&res.nilai>=SECRET_MIN&&!secretSeen();if(unlock){secretOn=true;secretMark();$('#tsec').classList.remove('hidden')}
   $('#tres').classList.remove('hidden');$('#trf').classList.remove('hidden');
   renderResult();show('result');save();
-  if(res.nilai>=70)confetti();
+  if(res.nilai>=70)confetti(unlock?150:60);
+  if(unlock)setTimeout(()=>$('#spop').classList.remove('hidden'),900);
 }
 
 function renderResult(){
@@ -288,6 +329,7 @@ function renderResult(){
   $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p>${hist.length>1?`<p class="text-sm font-bold">${hist.map((v,i)=>`Attempt ${i+1}: ${v}`).join(', ')}</p>`:''}<p id="stat" class="mt-2 text-sm"></p></div>
   <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="reflect">Next: Reflection</button><button id="again" class="btn" disabled>Try again</button></div>
   <p id="anote" class="mt-2 text-center text-sm font-bold"></p>
+  ${secretOn?`<div class="pnl mt-3 text-center" style="background:#fff4c2">${SM.done?'<p class="font-bold">✅ Secret Mission completed</p>':'<p class="font-bold">🔓 Secret Mission unlocked!</p><p class="text-sm">You did so well on your first try. Ready for a harder challenge?</p><p class="text-sm font-bold">Only certain students get this Secret Mission.</p>'}<button class="btn ${SM.done?'':'secbtn'} mt-2" data-t="secret">${SM.done?'View my Secret Mission':'Start Secret Mission'}</button></div>`:''}
   <h3 class="f h mt-5 text-4xl">Your answers</h3>
   ${Q.list.map((q,i)=>`<div class="pnl mt-2 text-sm">${isOk(q,A[i])?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
@@ -311,9 +353,34 @@ async function saveRef(){
   setR(rok?'✅ Your reflection has been saved.':'⚠️ Your reflection was not saved. <button id="rretry" class="font-bold underline">Save again</button>');
 }
 
-function confetti(){
+function confetti(n=60){
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  for(let i=0;i<60;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}vw;background:${['#ffd23f','#5bc0e6','#2f7d4c','#fff'][i%4]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)}
+  for(let i=0;i<n;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}vw;background:${['#ffd23f','#5bc0e6','#2f7d4c','#fff'][i%4]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)}
+}
+
+function mixSec(){
+  SM.list=shuf(SECRET).map(q=>{const p=q.fix?q.o.map((_,i)=>i):shuf(q.o.map((_,i)=>i));return{q:q.q,o:p.map(i=>q.o[i]),a:p.indexOf(q.a)}});
+  SM.ans=[];SM.txt='';SM.done=false;
+}
+const wc=s=>s.trim().split(/\s+/).filter(Boolean).length;
+function chkSec(){
+  const w=wc(SM.txt),all=SM.list.every((_,i)=>SM.ans[i]!==undefined),b=$('#sfin'),c=$('#swc');
+  if(c)c.textContent=`${w} words (write at least ${MIN_SEC})`;
+  if(b)b.disabled=!(all&&w>=MIN_SEC);
+}
+function renderSec(){
+  if(!SM.list.length)mixSec();
+  const b=$('#sbox'),L=SM.list,good=L.filter((q,i)=>SM.ans[i]===q.a).length;
+  if(SM.done){
+    b.innerHTML=`<div class="pnl text-center" style="background:#fff4c2"><p class="text-6xl">🏅</p><p class="f text-5xl">Eco Master</p><p class="font-bold">Secret Mission completed!</p><p class="text-sm">Only certain students get this mission. Well done!</p></div>
+    <div class="pnl mt-3"><p class="text-sm font-bold">${esc(user.nama)}, class ${esc(user.kelas)}, no. ${esc(user.absen)}</p><p class="text-sm">${esc(SM.when)}</p><p class="mt-2 font-bold">Multiple choice: ${good} of ${L.length} correct (bonus +${good*2})</p><p class="text-sm">Your teacher will add 0 to 2 points for your short answer.</p><h3 class="mt-3 font-bold">Your short answer</h3><p class="mt-1 whitespace-pre-wrap text-sm">${esc(SM.txt.trim())}</p></div>
+    <div class="fb ok" style="font-size:16px">Show to your teacher and explain your opinion about your short text.</div>`;
+    return;
+  }
+  b.innerHTML=`<div class="space-y-3">${L.map((q,i)=>{const a=SM.ans[i];return `<div class="pnl"><p class="text-sm font-bold">Question ${i+1} of 5</p><h3 class="mt-1 font-bold">${q.q}</h3>${q.o.map((t,j)=>`<button class="opt ${a===undefined?'':j===a?(a===q.a?'good':'bad'):'dim'}" data-sq="${i}" data-sj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct.</div>'}</div>`}).join('')}
+  <div class="pnl"><p class="text-sm font-bold">Question 5 of 5: Short answer</p><h3 class="mt-1 font-bold">${SQ5}</h3><textarea id="stxt" class="inp mt-2" rows="6" placeholder="Write 3 to 5 sentences in English">${esc(SM.txt)}</textarea><p id="swc" class="mt-1 text-sm font-bold"></p></div>
+  <button id="sfin" class="btn w-full" disabled>Finish Secret Mission</button></div>`;
+  chkSec();
 }
 
 function lockAgain(){
@@ -349,7 +416,7 @@ $('#go').onclick=()=>{
   show('warm');
 };
 $('#wq').oninput=renderWords;
-document.addEventListener('input',e=>{const i=e.target.dataset.r;if(i!==undefined){rf[+i]=e.target.value;chkRef()}});
+document.addEventListener('input',e=>{const i=e.target.dataset.r;if(i!==undefined){rf[+i]=e.target.value;chkRef()}if(e.target.id==='stxt'){SM.txt=e.target.value;chkSec()}});
 
 document.addEventListener('click',e=>{
   const t=e.target,g=s=>t.closest(s);let x;
@@ -358,6 +425,10 @@ document.addEventListener('click',e=>{
   if(x=g('[data-o]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.ans[S.cur]=+x.dataset.o;renderQ(x.dataset.k);lockNav()}}
   if(x=g('[data-st]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){const pk=S.pk[S.cur]=S.pk[S.cur]||[],i=+x.dataset.st;if(!pk.includes(i))pk.push(i);else if(pk[pk.length-1]===i)pk.pop();if(pk.length===S.list[S.cur].s.length)S.ans[S.cur]=[...pk];renderQ(x.dataset.k)}}
   if(x=g('[data-rs]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.pk[S.cur]=[];renderQ(x.dataset.k)}}
+  if(t.id==='spop'||t.id==='slater')$('#spop').classList.add('hidden');
+  if(t.id==='sgo'){$('#spop').classList.add('hidden');show('secret')}
+  if(x=g('[data-sq]')){const i=+x.dataset.sq;if(SM.ans[i]===undefined){SM.ans[i]=+x.dataset.sj;renderSec()}}
+  if(t.id==='sfin'){SM.done=true;SM.when=new Date().toLocaleString('en-GB');renderSec();scrollTo(0,0)}
   if(x=g('[data-nav]')){ST[x.dataset.k].cur+=+x.dataset.nav;renderQ(x.dataset.k)}
   if(x=g('[data-j]')){ST[x.dataset.k].cur=+x.dataset.j;renderQ(x.dataset.k)}
   if(x=g('[data-u]')){const i=+x.dataset.u;known.has(i)?known.delete(i):known.add(i);x.closest('.pnl').classList.toggle('wk',known.has(i));x.textContent=known.has(i)?'✓ Understood':'I understand';kbar()}
