@@ -53,7 +53,7 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 <section id="login" class="relative z-10 mx-auto max-w-md px-6 pt-12">
   <div class="text-6xl" style="animation:fl 4s ease-in-out infinite">🌍</div>
   <h1 class="f h mt-2 text-7xl leading-[.9]">Save our planet,<br>save energy</h1>
-  <p class="mt-3 font-bold">Eco Mission: complete 4 missions, earn your score, and win a badge!</p>
+  <p class="mt-3 font-bold">Eco Mission: complete 3 missions, earn your score, and win a badge!</p>
   <div class="pnl mt-6 space-y-3">
     <input id="nama" class="inp" placeholder="Full name" autocomplete="name">
     <div class="flex gap-3"><input id="kelas" class="inp" placeholder="Class, e.g. 8A"><input id="absen" type="number" min="1" class="inp" placeholder="Student no."></div>
@@ -65,48 +65,39 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 <main id="app" class="relative z-10 mx-auto hidden max-w-3xl px-4 pb-28">
   <header class="flex items-baseline justify-between gap-2 pt-3"><b class="f h text-3xl">Eco Mission</b><span id="who" class="text-sm font-bold"></span></header>
   <nav class="sticky top-0 z-20 flex gap-2 overflow-x-auto py-2" style="background:var(--sage)">
-    <button class="nv on" data-t="warm" style="--c:#2f7d4c">🌿<span>1 Warm-up</span></button>
-    <button class="nv" data-t="poster" style="--c:#1b78b4">♻️<span>2 Read</span></button>
-    <button class="nv" data-t="words" style="--c:#8a8030">♻️<span>3 Words</span></button>
-    <button class="nv" data-t="quiz" style="--c:#2f7d4c">♻️<span>4 Quiz</span></button>
+    <button class="nv" data-t="poster" style="--c:#1b78b4">♻️<span>1 Read</span></button>
+    <button class="nv" data-t="words" style="--c:#8a8030">♻️<span>2 Words</span></button>
+    <button class="nv" data-t="quiz" style="--c:#2f7d4c">♻️<span>3 Quiz</span></button>
     <button id="tres" class="nv hidden" data-t="result" style="--c:#17361c">🏅<span>Score</span></button>
     <button id="tsec" class="nv secnv hidden" data-t="secret" style="--c:#b8860b">🗝️<span>Secret</span></button>
     <button id="trf" class="nv hidden" data-t="reflect" style="--c:#1b78b4">💭<span>Reflect</span></button>
   </nav>
 
-  <section id="warm">
-    <h2 class="f h text-5xl leading-none">Mission 1: Warm-up</h2>
-    <p class="mt-1 font-bold">Answer 5 quick questions about being eco-friendly. You will see right away if your answer is correct. Finish all 5 to unlock the next missions.</p>
-    <p id="wmsg" class="fb no hidden">Please finish the warm-up first. Answer all 5 questions to unlock the next missions.</p>
-    <div id="wbox" class="mt-3"></div>
-  </section>
-
   <section id="poster" class="hidden">
-    <h2 class="f h text-5xl leading-none">Mission 2: Read the poster</h2>
+    <h2 class="f h text-5xl leading-none">Mission 1: Read the poster</h2>
     <p class="mt-1 font-bold">Read the poster carefully. Tap it to open it in full size. The meanings of the key words are in the Wordbank.</p>
     <a href="poster.png" target="_blank" rel="noopener" class="mt-3 block"><img src="poster.png" alt="Poster: Save Our Planet, Save Energy. 1. Reduced mobility: use sustainable transportation such as cycling, walking, or using public transportation. 2. Reducing waste: recycle paper, plastic, glass and metal to reduce energy consumption required for the production of new goods. 3. Harnessing energy: take advantage of solar energy by installing solar panels to generate electricity for your home." class="w-full rounded-2xl shadow-xl"></a>
-    <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="words">Go to Mission 3: Wordbank</button><button class="btn" data-t="quiz">Start the quiz</button></div>
+    <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="words">Go to Mission 2: Wordbank</button><button class="btn" data-t="quiz">Start the quiz</button></div>
   </section>
 
   <section id="words" class="hidden">
-    <h2 class="f h text-5xl leading-none">Mission 3: Wordbank</h2>
-    <p class="mt-1 font-bold">Read each word and its meaning. When you understand a word, press the "I understand" button under it. Understand at least <span class="minw">10</span> words to unlock the quiz.</p>
-    <p id="kmsg" class="fb no hidden"></p>
+    <h2 class="f h text-5xl leading-none">Mission 2: Wordbank</h2>
+    <p class="mt-1 font-bold">Read each word and its meaning. When you understand a word, press the "I understand" button under it.</p>
     <div class="pnl mt-3"><div class="h-3 overflow-hidden rounded-full" style="background:#cfe3b5"><div id="kbar" class="h-3 rounded-full transition-all" style="width:0;background:#1b78b4"></div></div><p id="ktxt" class="mt-1 text-sm font-bold"></p></div>
     <div class="mt-3 flex gap-2"><button class="fl on" data-fl="all">All</button><button class="fl" data-fl="no">Not yet</button><button class="fl" data-fl="yes">Understood</button></div>
     <input id="wq" class="inp mt-3" placeholder="Search a word or meaning">
     <div id="wlist" class="mt-3 space-y-3"></div>
-    <button class="btn mt-5 w-full" data-t="quiz">Go to Mission 4: Quiz</button>
+    <button class="btn mt-5 w-full" data-t="quiz">Go to Mission 3: Quiz</button>
   </section>
 
   <section id="quiz" class="hidden">
-    <h2 class="f h mb-3 text-5xl leading-none">Mission 4: Quiz</h2>
+    <h2 class="f h mb-3 text-5xl leading-none">Mission 3: Quiz</h2>
     <div id="qbox"></div>
   </section>
   <section id="result" class="hidden"><div id="rbox"></div></section>
   <section id="secret" class="hidden">
     <h2 class="f h text-5xl leading-none">Secret Mission</h2>
-    <p class="mt-1 font-bold">You unlocked a special challenge that only certain students get! Answer 4 questions and write a short answer.</p>
+    <p class="mt-1 font-bold">You unlocked a special challenge that only certain students get! Answer the question and write a short answer.</p>
     <div id="sbox" class="mt-3"></div>
   </section>
   <section id="reflect" class="hidden">
@@ -119,11 +110,11 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 <button id="fab" class="btn fixed bottom-4 right-4 z-30 hidden shadow-xl">📌 View poster</button>
 <div id="spop" class="fixed inset-0 z-[70] flex hidden items-center justify-center p-4" style="background:rgba(23,54,28,.65)" role="dialog" aria-modal="true" aria-labelledby="spt">
   <div class="pnl w-full max-w-sm text-center" style="background:#fff4c2">
-    <p class="text-6xl">🔓</p>
+    <p class="text-6xl">🤫</p>
     <h3 id="spt" class="f text-4xl">Secret Mission unlocked!</h3>
-    <p class="mt-1 font-bold">Amazing! You did so well on your first try. A special challenge is waiting for you: 4 questions and a short answer.</p>
+    <p class="mt-1 font-bold">Amazing! You did so well on your first try. A special challenge is waiting for you: 1 question and a short answer.</p>
     <p class="mt-2 text-sm font-bold">Only certain students get this Secret Mission, and you are one of them!</p>
-    <p class="mt-3 rounded-lg px-3 py-2 text-sm font-bold" style="background:#ffd23f">⭐ Answer all 5 questions correctly and you can earn 1 star for your class assessment!</p>
+    <p class="mt-3 rounded-lg px-3 py-2 text-sm font-bold" style="background:#ffd23f">⭐ Answer both questions correctly and you can earn 1 star for your class assessment!</p>
     <button id="sgo" class="btn secbtn mt-4 w-full">Start Secret Mission</button>
     <button id="slater" class="mt-2 w-full rounded-lg py-2 text-sm font-bold underline">Maybe later</button>
   </div>
@@ -132,23 +123,13 @@ dialog::backdrop{background:rgba(23,54,28,.65)}
 
 <script>
 /* ===== QUESTIONS (a = index of the correct option, starting from 0) ===== */
-const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.','Ordering: tap the steps one by one in the correct order.'];
+const PART=['Multiple Choice: choose A, B, C, or D.','True or False: choose based on the poster.','Ordering: tap the steps in the correct order, then press Confirm.'];
 const TF=['True','False'];
 const QUESTIONS=[
  {q:'What is the main purpose of the poster?',o:['To explain how to use electronic devices','To encourage people to save energy and protect the planet','To promote new transportation products','To teach people how to make recycling bins'],a:1},
- {q:'Which activity is an example of sustainable transportation?',o:['Driving a private car everywhere','Using a motorcycle for every trip','Walking or cycling','Buying a new vehicle'],a:2},
  {q:'Why does the poster encourage people to recycle waste?',o:['To increase the amount of waste','To reduce energy consumption in producing new goods','To encourage people to buy more products','To make transportation more difficult'],a:1},
- {q:'What can people install to generate electricity for their homes?',o:['Solar panels','Recycling bins','Plastic containers','Water bottles'],a:0},
- {q:'Which of the following actions is NOT suggested by the poster?',o:['Using public transportation','Recycling paper and plastic','Installing solar panels','Burning plastic waste'],a:3},
  {q:'What does the word “harnessing” in “Harnessing Energy” most likely mean?',o:['Wasting energy','Using energy effectively','Throwing away energy','Stopping energy production'],a:1},
- {q:'Which action shows that a student follows the message of the poster?',o:['Throwing plastic bottles into a river','Leaving the lights on all day','Walking to a nearby destination','Using disposable products unnecessarily'],a:2},
- {q:'According to the poster, which materials can people recycle?',o:['Paper, plastic, glass, and metal','Food, water, and air','Sand, soil, and smoke','Oil, gasoline, and sunlight'],a:0},
- {q:'What is one benefit of using solar panels at home?',o:['They produce more plastic waste.','They help generate electricity using solar energy.','They increase the need for public transportation.','They make recycling unnecessary.'],a:1},
- {q:'Which title best represents the message of the poster?',o:['The Importance of Modern Technology','How to Build a New House','Save Our Planet, Save Energy','The Benefits of Private Vehicles'],a:2},
- {q:'What does the phrase “Save Our Planet” encourage people to do?',o:['Protect the Earth','Build more factories','Use more plastic','Buy more vehicles'],a:0},
- {q:'Rina wants to reduce energy consumption. Which activity should she choose?',o:['Driving a car to a nearby shop','Cycling to a nearby shop','Throwing away recyclable bottles','Leaving electronic devices on when not in use'],a:1},
  {q:'Why is using public transportation recommended in the poster?',o:['It helps support sustainable transportation.','It increases plastic production.','It makes recycling unnecessary.','It uses solar panels at home.'],a:0},
- {q:'Which recycling bin activity is most appropriate based on the poster?',o:['Mixing all waste and throwing it into a river','Burning paper and plastic waste','Putting recyclable materials into the appropriate bins','Leaving waste on the ground'],a:2},
  {q:'What can we conclude from the poster?',o:['Only adults can help protect the environment.','Small actions can help save energy and protect the planet.','Recycling is the only way to save the planet.','Solar energy is not useful for households.'],a:1},
  {q:'The poster suggests walking, cycling, and using public transportation to support sustainable transportation.',o:TF,a:0},
  {q:'Recycling paper, plastic, glass, and metal can help reduce the energy needed to produce new goods.',o:TF,a:0},
@@ -160,6 +141,19 @@ const QUESTIONS=[
  {q:'How to Save Electricity When Watching TV: put the steps in the correct order.',s:['Press the power button to turn on the television.','Choose your favorite program.','Turn off the television when you finish watching.','Unplug the television if you will not use it for a long time.']},
  {q:'How to Save Energy in the Classroom: put the steps in the correct order.',s:['Check the classroom before leaving.','Turn off the fans when nobody is in the classroom.','Turn off the classroom lights.','Leave the classroom after the lesson.']},
  {q:'How to Plant a Tree at School: put the steps in the correct order.',s:['Prepare a small tree and a suitable place.','Dig a hole in the soil.','Put the tree into the hole and cover its roots with soil.','Water the plant regularly.']}
+];
+/* ===== SPARE multiple-choice questions (not used by the quiz; copy a line into QUESTIONS to use it) ===== */
+const SPARE=[
+ {q:'Which activity is an example of sustainable transportation?',o:['Driving a private car everywhere','Using a motorcycle for every trip','Walking or cycling','Buying a new vehicle'],a:2},
+ {q:'What can people install to generate electricity for their homes?',o:['Solar panels','Recycling bins','Plastic containers','Water bottles'],a:0},
+ {q:'Which of the following actions is NOT suggested by the poster?',o:['Using public transportation','Recycling paper and plastic','Installing solar panels','Burning plastic waste'],a:3},
+ {q:'Which action shows that a student follows the message of the poster?',o:['Throwing plastic bottles into a river','Leaving the lights on all day','Walking to a nearby destination','Using disposable products unnecessarily'],a:2},
+ {q:'According to the poster, which materials can people recycle?',o:['Paper, plastic, glass, and metal','Food, water, and air','Sand, soil, and smoke','Oil, gasoline, and sunlight'],a:0},
+ {q:'What is one benefit of using solar panels at home?',o:['They produce more plastic waste.','They help generate electricity using solar energy.','They increase the need for public transportation.','They make recycling unnecessary.'],a:1},
+ {q:'Which title best represents the message of the poster?',o:['The Importance of Modern Technology','How to Build a New House','Save Our Planet, Save Energy','The Benefits of Private Vehicles'],a:2},
+ {q:'What does the phrase “Save Our Planet” encourage people to do?',o:['Protect the Earth','Build more factories','Use more plastic','Buy more vehicles'],a:0},
+ {q:'Rina wants to reduce energy consumption. Which activity should she choose?',o:['Driving a car to a nearby shop','Cycling to a nearby shop','Throwing away recyclable bottles','Leaving electronic devices on when not in use'],a:1},
+ {q:'Which recycling bin activity is most appropriate based on the poster?',o:['Mixing all waste and throwing it into a river','Burning paper and plastic waste','Putting recyclable materials into the appropriate bins','Leaving waste on the ground'],a:2}
 ];
 /* ===== WORDBANK: [word, part of speech, English meaning, example sentence] ===== */
 const WORDS=[
@@ -205,14 +199,6 @@ const WORDS=[
  ['habitat','n','the natural home of an animal or a plant','Fire can destroy the habitat of many animals.'],
  ['haze','n','thin smoke or dust in the air that makes it hard to see','The haze from the fires made the air dirty.']
 ];
-/* ===== WARM-UP: 5 basic questions before the poster ===== */
-const WARM=[
- {q:'What does "eco-friendly" mean?',o:['Very expensive','Good for the environment','Made of gold','Dangerous for nature'],a:1},
- {q:'Which color do people often connect with nature and the environment?',o:['Black','Red','Green','Grey'],a:2},
- {q:'Which action saves energy?',o:['Leaving the fan on all day','Using many lamps at the same time','Opening the fridge for a long time','Turning off the lights when we leave a room'],a:3},
- {q:'Which item can we recycle?',o:['A plastic bottle','A used tissue','Food leftovers','Dirty water'],a:0},
- {q:'Which one is a source of clean energy?',o:['Coal','Oil','The sun','Gasoline'],a:2}
-];
 /* ===== REFLECTION: t:1 = written answer, otherwise multiple choice ===== */
 const REF=[
  {q:'How well did you understand the poster?',o:['Very well','Quite well','A little','Not yet']},
@@ -224,12 +210,9 @@ const REF=[
 
 /* ===== SECRET MISSION: 4 multiple-choice questions (fix:1 = keep the option order) + 1 short answer ===== */
 const SECRET=[
- {q:'A small factory wants to follow the idea in “Reducing Waste”. Which plan is best?',o:['Buy new raw materials for every product.','Make new products from recycled paper, plastic, glass, and metal.','Burn the leftover materials every day.','Run the machines all night.'],a:1},
- {q:'In “Use sustainable transportation”, the word “sustainable” is closest in meaning to ...',o:['fast and expensive','good for the environment over a long time','old and slow','only for adults'],a:1},
- {q:'Many sentences in the poster begin with verbs such as “Use”, “Recycle”, and “Take”. What is the purpose of these sentences?',o:['To tell a story about the past','To ask the reader questions','To give instructions and advice','To describe a famous person'],a:2},
- {q:'Look at these steps: 1) Plug the charger into the socket. 2) Connect your phone to the charger. 3) Charge your phone until the battery is full. 4) Leave the charger plugged in all night. Which step does NOT help save energy?',o:['Step 1','Step 2','Step 3','Step 4'],a:3,fix:1}
+ {q:'A small factory wants to follow the idea in “Reducing Waste”. Which plan is best?',o:['Buy new raw materials for every product.','Make new products from recycled paper, plastic, glass, and metal.','Burn the leftover materials every day.','Run the machines all night.'],a:1}
 ];
-const SQ5='What is your opinion about forest fires? Explain their impacts on the environment and on people. (Write 3 to 5 sentences in English.)';
+const SQ5='What is your opinion about wildfire in the forest? Explain their impacts on the environment and on people. (Write 3 to 5 sentences in English.)';
 const SM={ans:[],txt:'',done:false,list:[],when:''},MIN_SEC=15;
 const SECRET_MIN=92; /* minimum score on the FIRST attempt to unlock the Secret Mission */
 const skey=()=>'ecoSecret:'+[user.nama,user.kelas,user.absen].map(v=>String(v).trim().toLowerCase().replace(/\s+/g,' ')).join('|');
@@ -237,9 +220,9 @@ const secretSeen=()=>{try{return !!localStorage.getItem(skey())}catch(e){return 
 const secretMark=()=>{try{localStorage.setItem(skey(),'1')}catch(e){}};
 
 const $=s=>document.querySelector(s);
-const ST={warm:{list:WARM,ans:[],cur:0,pk:[]},quiz:{list:QUESTIONS,ans:[],cur:0,pk:[]}};
-const Q=ST.quiz,known=new Set(),rf=[],MIN_WORDS=10;
-let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[],wUnlocked=false,secretOn=false;
+const ST={quiz:{list:QUESTIONS,ans:[],cur:0,pk:[]}};
+const Q=ST.quiz,known=new Set(),rf=[];
+let user={},res=null,ok={db:false,sheet:false},fl='all',rfDone=false,rok=false,rmsg='',att=0,hist=[],secretOn=false;
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const say=w=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u)};
 
@@ -254,28 +237,14 @@ function mixQuiz(){
 const isOk=(q,a)=>q.s?Array.isArray(a)&&q.a.every((v,k)=>v===a[k]):a===q.a;
 function ordHTML(k,q,S,a,rt){
   const pk=S.pk[S.cur]||[];
-  return q.s.map((t,i)=>{const n=pk.indexOf(i);return `<button class="opt ${n>-1?(a===undefined?'sel':rt?'good':'bad'):''}" data-k="${k}" data-st="${i}"><b>${n>-1?n+1:'•'}</b><span>${t}</span></button>`}).join('')+(a===undefined?`<button class="fl mt-3" data-k="${k}" data-rs="1">Reset order</button>`:'');
-}
-const warmDone=()=>WARM.every((_,i)=>ST.warm.ans[i]!==undefined);
-const wordsOk=()=>wUnlocked||known.size>=MIN_WORDS;
-function lockNav(){
-  const d=warmDone();
-  document.querySelectorAll('.nv').forEach(b=>{const t=b.dataset.t;if(['poster','words','quiz'].includes(t)){const lk=!d||(t==='quiz'&&!wordsOk());b.style.opacity=lk?'.4':'';b.firstChild.textContent=lk?'🔒':'♻️'}});
-  if(d)$('#wmsg').classList.add('hidden');
+  return q.s.map((t,i)=>{const n=pk.indexOf(i);return `<button class="opt ${n>-1?(a===undefined?'sel':rt?'good':'bad'):''}" data-k="${k}" data-st="${i}"><b>${n>-1?n+1:'•'}</b><span>${t}</span></button>`}).join('')+(a===undefined?`<div class="mt-3 flex items-center gap-2"><button class="fl" data-k="${k}" data-rs="1">Reset order</button><button class="btn flex-1" data-k="${k}" data-cf="1" ${pk.length===q.s.length?'':'disabled'}>Confirm answer</button></div><p class="mt-1 text-xs font-bold">${pk.length<q.s.length?`Steps chosen: ${pk.length} of ${q.s.length}`:'Check your order, then press Confirm.'}</p>`:'');
 }
 function show(id){
   if(id==='secret'&&!secretOn)return;
-  const blocked=id!=='warm'&&!warmDone();
-  if(blocked)id='warm';
-  const wlock=!blocked&&id==='quiz'&&!wordsOk();
-  if(wlock){id='words';$('#kmsg').textContent=`Please understand at least ${MIN_WORDS} words before the quiz. You have ${known.size} so far.`}
-  $('#wmsg').classList.toggle('hidden',!blocked);
-  $('#kmsg').classList.toggle('hidden',!wlock);
-  lockNav();
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!==id));
   document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
   $('#fab').classList.toggle('hidden',id!=='quiz'||!!res);
-  if(id==='warm'||id==='quiz')renderQ(id);
+  if(id==='quiz')renderQ('quiz');
   if(id==='reflect')renderRef();
   if(id==='secret')renderSec();
   if(id==='result')lockAgain();
@@ -284,11 +253,8 @@ function show(id){
 
 function kbar(){
   const n=WORDS.length;
-  if(known.size>=MIN_WORDS)wUnlocked=true;
   $('#kbar').style.width=known.size/n*100+'%';
-  $('#ktxt').textContent=`Understood ${known.size} of ${n} words. `+(wordsOk()?(known.size===n?'🎉 You understand all the words! Time for the quiz.':'The quiz is unlocked!'):`Understand at least ${MIN_WORDS} words to unlock the quiz.`);
-  if(wordsOk())$('#kmsg').classList.add('hidden');
-  lockNav();
+  $('#ktxt').textContent=`Understood ${known.size} of ${n} words.`+(known.size===n?' 🎉 You understand all the words! Time for the quiz.':'');
 }
 function renderWords(){
   const f=$('#wq').value.toLowerCase();
@@ -297,20 +263,20 @@ function renderWords(){
 }
 
 function renderQ(k){
-  const S=ST[k],L=S.list,n=L.length,b=$(k==='warm'?'#wbox':'#qbox');
+  const S=ST[k],L=S.list,n=L.length,b=$('#qbox');
   if(k==='quiz'&&res){b.innerHTML='<p class="pnl">Your answers have been submitted. Check your score in the Score tab.</p>';return}
   const q=L[S.cur],a=S.ans[S.cur],miss=L.map((_,i)=>i).filter(i=>S.ans[i]===undefined),pc=(n-miss.length)/n*100,
   cl=i=>a===undefined?'':i===a?(a===q.a?'good':'bad'):'dim',
-  right=L.filter((x,i)=>S.ans[i]===x.a).length,rt=a!==undefined&&isOk(q,a);
+  rt=a!==undefined&&isOk(q,a);
   b.innerHTML=`<div class="pnl"><div class="flex items-end gap-2"><div class="mb-2 h-3 flex-1 overflow-hidden rounded-full" style="background:#cfe3b5"><div class="h-3 rounded-full transition-all" style="width:${pc}%;background:#2f7d4c"></div></div><span class="transition-all" style="font-size:${18+pc*.22}px;line-height:1">${pc<34?'🌱':pc<67?'🌿':'🌳'}</span></div>
-  <p class="text-sm">Question ${S.cur+1} of ${n}. ${k==='quiz'?PART[q.s?2:q.o.length===2?1:0]:'Choose the best answer.'}</p>
+  <p class="text-sm">Question ${S.cur+1} of ${n}. ${PART[q.s?2:q.o.length===2?1:0]}</p>
   <h3 class="mt-1 text-lg font-bold">${q.q}</h3>
   ${q.s?ordHTML(k,q,S,a,rt):q.o.map((t,i)=>`<button class="opt ${cl(i)}" data-k="${k}" data-o="${i}"><b>${'ABCD'[i]}</b><span>${t}</span></button>`).join('')}
   ${a===undefined?'':rt?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct. Keep going!</div>'}
   <div class="mt-5 flex justify-between"><button class="btn" data-k="${k}" data-nav="-1" ${S.cur?'':'disabled'}>Back</button><button class="btn" data-k="${k}" data-nav="1" ${S.cur<n-1?'':'disabled'}>Next</button></div>
   <div class="mt-4 flex flex-wrap gap-1">${L.map((_,i)=>`<button class="qn ${i===S.cur?'cur':''} ${S.ans[i]!==undefined?'dn':''}" data-k="${k}" data-j="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('')}</div>
-  ${k==='quiz'?`<button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>`:`<button class="btn mt-4 w-full" data-t="poster" ${miss.length?'disabled':''}>Continue to the poster</button>`}
-  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to ${k==='quiz'?'submit':'continue'}. Left: ${miss.map(i=>i+1).join(', ')}.`:k==='quiz'?'All questions answered. Ready to submit!':`Warm-up score: ${right} of ${n}. Great start!`}</p></div>`;
+  <button class="btn mt-4 w-full" id="send" ${miss.length?'disabled':''}>Submit answers</button>
+  <p class="mt-2 text-center text-sm font-bold">${miss.length?`Answer all questions to submit. Left: ${miss.map(i=>i+1).join(', ')}.`:'All questions answered. Ready to submit!'}</p></div>`;
 }
 
 function finish(){
@@ -329,7 +295,7 @@ function renderResult(){
   $('#rbox').innerHTML=`<div class="pnl text-center"><div id="ring" class="mx-auto grid h-44 w-44 place-items-center rounded-full"><div class="grid h-36 w-36 place-items-center rounded-full" style="background:var(--mint)"><span id="num" class="f text-6xl">0</span></div></div><p class="mt-3 text-5xl">${b[0]}</p><p class="f text-4xl">${b[1]}</p><p class="font-bold">${r.benar} correct out of ${r.total}</p><p class="text-sm">Words you understood: ${known.size} of ${WORDS.length}</p>${hist.length>1?`<p class="text-sm font-bold">${hist.map((v,i)=>`Attempt ${i+1}: ${v}`).join(', ')}</p>`:''}<p id="stat" class="mt-2 text-sm"></p></div>
   <div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="btn" data-t="reflect">Next: Reflection</button><button id="again" class="btn" disabled>Try again</button></div>
   <p id="anote" class="mt-2 text-center text-sm font-bold"></p>
-  ${secretOn?`<div class="pnl mt-3 text-center" style="background:#fff4c2">${SM.done?'<p class="font-bold">✅ Secret Mission completed</p>':'<p class="font-bold">🔓 Secret Mission unlocked!</p><p class="text-sm">You did so well on your first try. Ready for a harder challenge?</p><p class="text-sm font-bold">Only certain students get this Secret Mission.</p>'}<button class="btn ${SM.done?'':'secbtn'} mt-2" data-t="secret">${SM.done?'View my Secret Mission':'Start Secret Mission'}</button></div>`:''}
+  ${secretOn?`<div class="pnl mt-3 text-center" style="background:#fff4c2">${SM.done?'<p class="font-bold">✅ Secret Mission completed</p>':'<p class="font-bold">🤫 Secret Mission unlocked!</p><p class="text-sm">You did so well on your first try. Ready for a harder challenge?</p><p class="text-sm font-bold">Only certain students get this Secret Mission.</p>'}<button class="btn ${SM.done?'':'secbtn'} mt-2" data-t="secret">${SM.done?'View my Secret Mission':'Start Secret Mission'}</button></div>`:''}
   <h3 class="f h mt-5 text-4xl">Your answers</h3>
   ${Q.list.map((q,i)=>`<div class="pnl mt-2 text-sm">${isOk(q,A[i])?'✅ <b>Correct</b>':'❌ <b>Incorrect</b>'} - <b>${i+1}.</b> ${q.q}</div>`).join('')}`;
   let t0;const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1200,1),v=Math.round(r.nilai*p);$('#num').textContent=v;$('#ring').style.background=`conic-gradient(var(--sky) ${v}%,#cfe3b5 0)`;if(p<1)requestAnimationFrame(step)};
@@ -377,8 +343,8 @@ function renderSec(){
     <div class="fb ok" style="font-size:16px">Show to your teacher and explain your opinion about your short text.</div>`;
     return;
   }
-  b.innerHTML=`<div class="space-y-3">${L.map((q,i)=>{const a=SM.ans[i];return `<div class="pnl"><p class="text-sm font-bold">Question ${i+1} of 5</p><h3 class="mt-1 font-bold">${q.q}</h3>${q.o.map((t,j)=>`<button class="opt ${a===undefined?'':j===a?(a===q.a?'good':'bad'):'dim'}" data-sq="${i}" data-sj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct.</div>'}</div>`}).join('')}
-  <div class="pnl"><p class="text-sm font-bold">Question 5 of 5: Short answer</p><h3 class="mt-1 font-bold">${SQ5}</h3><textarea id="stxt" class="inp mt-2" rows="6" placeholder="Write 3 to 5 sentences in English">${esc(SM.txt)}</textarea><p id="swc" class="mt-1 text-sm font-bold"></p></div>
+  b.innerHTML=`<div class="space-y-3">${L.map((q,i)=>{const a=SM.ans[i];return `<div class="pnl"><p class="text-sm font-bold">Question ${i+1} of ${L.length+1}</p><h3 class="mt-1 font-bold">${q.q}</h3>${q.o.map((t,j)=>`<button class="opt ${a===undefined?'':j===a?(a===q.a?'good':'bad'):'dim'}" data-sq="${i}" data-sj="${j}"><b>${'ABCD'[j]}</b><span>${t}</span></button>`).join('')}${a===undefined?'':a===q.a?'<div class="fb ok">✅ Correct! Well done.</div>':'<div class="fb no">❌ Not correct.</div>'}</div>`}).join('')}
+  <div class="pnl"><p class="text-sm font-bold">Question ${L.length+1} of ${L.length+1}: Short answer</p><h3 class="mt-1 font-bold">${SQ5}</h3><textarea id="stxt" class="inp mt-2" rows="6" placeholder="Write 3 to 5 sentences in English">${esc(SM.txt)}</textarea><p id="swc" class="mt-1 text-sm font-bold"></p></div>
   <button id="sfin" class="btn w-full" disabled>Finish Secret Mission</button></div>`;
   chkSec();
 }
@@ -413,7 +379,7 @@ $('#go').onclick=()=>{
   user={nama,kelas,absen};mixQuiz();
   $('#login').classList.add('hidden');$('#app').classList.remove('hidden');
   $('#who').textContent=`Hello, ${nama}!`;
-  show('warm');
+  show('poster');
 };
 $('#wq').oninput=renderWords;
 document.addEventListener('input',e=>{const i=e.target.dataset.r;if(i!==undefined){rf[+i]=e.target.value;chkRef()}if(e.target.id==='stxt'){SM.txt=e.target.value;chkSec()}});
@@ -422,8 +388,9 @@ document.addEventListener('click',e=>{
   const t=e.target,g=s=>t.closest(s);let x;
   if(x=g('[data-say]'))say(x.dataset.say);
   if(x=g('[data-t]'))show(x.dataset.t);
-  if(x=g('[data-o]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.ans[S.cur]=+x.dataset.o;renderQ(x.dataset.k);lockNav()}}
-  if(x=g('[data-st]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){const pk=S.pk[S.cur]=S.pk[S.cur]||[],i=+x.dataset.st;if(!pk.includes(i))pk.push(i);else if(pk[pk.length-1]===i)pk.pop();if(pk.length===S.list[S.cur].s.length)S.ans[S.cur]=[...pk];renderQ(x.dataset.k)}}
+  if(x=g('[data-o]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.ans[S.cur]=+x.dataset.o;renderQ(x.dataset.k)}}
+  if(x=g('[data-st]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){const pk=S.pk[S.cur]=S.pk[S.cur]||[],i=+x.dataset.st;if(!pk.includes(i))pk.push(i);else if(pk[pk.length-1]===i)pk.pop();renderQ(x.dataset.k)}}
+  if(x=g('[data-cf]')){const S=ST[x.dataset.k],pk=S.pk[S.cur]||[];if(S.ans[S.cur]===undefined&&pk.length===S.list[S.cur].s.length){S.ans[S.cur]=[...pk];renderQ(x.dataset.k)}}
   if(x=g('[data-rs]')){const S=ST[x.dataset.k];if(S.ans[S.cur]===undefined){S.pk[S.cur]=[];renderQ(x.dataset.k)}}
   if(t.id==='spop'||t.id==='slater')$('#spop').classList.add('hidden');
   if(t.id==='sgo'){$('#spop').classList.add('hidden');show('secret')}
@@ -443,7 +410,6 @@ document.addEventListener('click',e=>{
   if(t.id==='cls')$('#pdlg').close();
 });
 
-document.querySelectorAll('.minw').forEach(e=>e.textContent=MIN_WORDS);
 renderWords();
 </script>
 </body>
